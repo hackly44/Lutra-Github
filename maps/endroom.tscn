@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://cxu20vr33t154"]
+
+[ext_resource type="ArrayOccluder3D" uid="uid://dia2td525iiwp" path="res://maps/occCulling/endroom.occ" id="1_4tif7"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ej0ff"]
+size = Vector3(7, 9, 0.75)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_4tif7"]
+data = PackedVector3Array(-3.5, 4.5, 0.375, 3.5, 4.5, 0.375, -3.5, -4.5, 0.375, 3.5, 4.5, 0.375, 3.5, -4.5, 0.375, -3.5, -4.5, 0.375, 3.5, 4.5, -0.375, -3.5, 4.5, -0.375, 3.5, -4.5, -0.375, -3.5, 4.5, -0.375, -3.5, -4.5, -0.375, 3.5, -4.5, -0.375, 3.5, 4.5, 0.375, 3.5, 4.5, -0.375, 3.5, -4.5, 0.375, 3.5, 4.5, -0.375, 3.5, -4.5, -0.375, 3.5, -4.5, 0.375, -3.5, 4.5, -0.375, -3.5, 4.5, 0.375, -3.5, -4.5, -0.375, -3.5, 4.5, 0.375, -3.5, -4.5, 0.375, -3.5, -4.5, -0.375, 3.5, 4.5, 0.375, -3.5, 4.5, 0.375, 3.5, 4.5, -0.375, -3.5, 4.5, 0.375, -3.5, 4.5, -0.375, 3.5, 4.5, -0.375, -3.5, -4.5, 0.375, 3.5, -4.5, 0.375, -3.5, -4.5, -0.375, 3.5, -4.5, 0.375, 3.5, -4.5, -0.375, -3.5, -4.5, -0.375)
+
+[node name="endroom" type="Marker3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0.5)
+mesh = SubResource("BoxMesh_ej0ff")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0.5)
+shape = SubResource("ConcavePolygonShape3D_4tif7")
+
+[node name="OccluderInstance3D" type="OccluderInstance3D" parent="."]
+occluder = ExtResource("1_4tif7")

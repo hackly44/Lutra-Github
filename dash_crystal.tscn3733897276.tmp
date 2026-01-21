@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://b1r44tb0n35sm"]
+
+[ext_resource type="Script" uid="uid://bpl4wq2k6xu1v" path="res://dash_crystal.gd" id="1_r4dwi"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_01ofj"]
+radius = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_mk6cu"]
+
+[node name="dashCrystal" type="Area3D"]
+script = ExtResource("1_r4dwi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_01ofj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.271853, -0.271853, -6.82934e-16, 0.222689, 0.222689, 0.220516, -0.155928, -0.155928, 0.314929, 0, -0.000291176, 0)
+mesh = SubResource("BoxMesh_mk6cu")

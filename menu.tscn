@@ -1,0 +1,163 @@
+[gd_scene load_steps=5 format=3 uid="uid://dvmie2grolkmd"]
+
+[ext_resource type="Script" uid="uid://cg36wrlxwxmpg" path="res://menu.gd" id="1_mae5d"]
+[ext_resource type="Texture2D" uid="uid://bs4qxqhjssiu6" path="res://lutratitle.png" id="1_ouk20"]
+[ext_resource type="FontFile" uid="uid://bamnh4btmynt1" path="res://Tomorrow-Regular.ttf" id="2_mae5d"]
+[ext_resource type="AudioStream" uid="uid://cqb1nen618xc5" path="res://Audio/sfx/11L-a_medium_pitched_men-1755663718224.ogg" id="4_4hy44"]
+
+[node name="Menu" type="Node2D"]
+script = ExtResource("1_mae5d")
+
+[node name="Lutratitle" type="Sprite2D" parent="."]
+position = Vector2(145.498, 78.5)
+scale = Vector2(0.179019, 0.179019)
+texture = ExtResource("1_ouk20")
+
+[node name="Play" type="Button" parent="."]
+offset_left = 16.0
+offset_top = 172.0
+offset_right = 256.0
+offset_bottom = 256.0
+theme_override_fonts/font = ExtResource("2_mae5d")
+theme_override_font_sizes/font_size = 40
+text = "Play"
+
+[node name="TestPlay" type="Button" parent="."]
+offset_left = 16.0
+offset_top = 260.0
+offset_right = 256.0
+offset_bottom = 292.0
+theme_override_fonts/font = ExtResource("2_mae5d")
+theme_override_font_sizes/font_size = 20
+text = "Play Testroom"
+
+[node name="Settings" type="Button" parent="."]
+visible = false
+offset_left = 16.0
+offset_top = 260.0
+offset_right = 256.0
+offset_bottom = 344.0
+theme_override_fonts/font = ExtResource("2_mae5d")
+theme_override_font_sizes/font_size = 40
+text = "Settings"
+
+[node name="Panel" type="Panel" parent="."]
+offset_left = 16.0
+offset_top = 296.0
+offset_right = 256.0
+offset_bottom = 632.0
+
+[node name="FOVPanel" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = 44.0
+
+[node name="FOV" type="HSlider" parent="Panel/FOVPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 3.0
+offset_top = 4.0
+offset_right = -5.0
+offset_bottom = 20.0
+grow_horizontal = 2
+min_value = 30.0
+max_value = 130.0
+value = 70.0
+rounded = true
+
+[node name="FOVLabel" type="Label" parent="Panel/FOVPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 3.0
+offset_top = 16.0
+offset_right = -190.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_mae5d")
+theme_override_font_sizes/font_size = 20
+text = "FOV"
+
+[node name="FOVValue" type="Label" parent="Panel/FOVPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 198.0
+offset_top = 16.0
+offset_right = -3.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_mae5d")
+theme_override_font_sizes/font_size = 20
+text = "70"
+horizontal_alignment = 2
+
+[node name="SensitivityPanel" type="Panel" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 4.0
+offset_top = 48.0
+offset_right = -4.0
+offset_bottom = 88.0
+
+[node name="Sensitivity" type="HSlider" parent="Panel/SensitivityPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 3.0
+offset_top = 4.0
+offset_right = -5.0
+offset_bottom = 20.0
+grow_horizontal = 2
+min_value = 25.0
+max_value = 300.0
+value = 100.0
+rounded = true
+
+[node name="SensitivityLabel" type="Label" parent="Panel/SensitivityPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 3.0
+offset_top = 16.0
+offset_right = -67.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_mae5d")
+theme_override_font_sizes/font_size = 20
+text = "Sensitivity"
+
+[node name="SensitivityValue" type="Label" parent="Panel/SensitivityPanel"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 189.0
+offset_top = 16.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_mae5d")
+theme_override_font_sizes/font_size = 20
+text = "100"
+horizontal_alignment = 2
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_4hy44")
+
+[node name="Verson Lable" type="Label" parent="."]
+offset_left = 976.0
+offset_top = 586.0
+offset_right = 1152.0
+offset_bottom = 648.0
+theme_override_font_sizes/font_size = 11
+text = "--Version--"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[connection signal="pressed" from="Play" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="TestPlay" to="." method="_on_test_play_pressed"]

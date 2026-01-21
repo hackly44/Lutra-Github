@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://cwg1bg887c8ty"]
+
+[ext_resource type="Script" uid="uid://cme32ka83qfwf" path="res://level objects/object scripts/launcher.gd" id="1_xffbg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xffbg"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_tj2jq"]
+material = SubResource("StandardMaterial3D_xffbg")
+
+[node name="Launcher" type="Node3D"]
+script = ExtResource("1_xffbg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_tj2jq")
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+target_position = Vector3(0, 5, 0)
+collision_mask = 2
+
+[node name="Marker3D" type="Marker3D" parent="."]
+
+[node name="Children" type="Node3D" parent="."]

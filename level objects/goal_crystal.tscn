@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://04s2twoa0yen"]
+
+[ext_resource type="Script" uid="uid://bq5cx3pmsxkrb" path="res://level objects/object scripts/goal_crystal.gd" id="1_kjyl2"]
+[ext_resource type="AudioStream" uid="uid://dxmbqk7vst7f5" path="res://Audio/sfx/11L-a_low_pitched_video_-1755663621649.ogg" id="2_h6fq2"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_01ofj"]
+radius = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ytar4"]
+resource_local_to_scene = true
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mk6cu"]
+
+[node name="dashCrystal" type="Area3D"]
+script = ExtResource("1_kjyl2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_01ofj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.271853, -0.271853, -6.82934e-16, 0.222689, 0.222689, 0.220516, -0.155928, -0.155928, 0.314929, 0, -0.000291176, 0)
+material_override = SubResource("StandardMaterial3D_ytar4")
+mesh = SubResource("BoxMesh_mk6cu")
+metadata/parent = &""
+
+[node name="OmniLight3D" type="OmniLight3D" parent="MeshInstance3D"]
+transform = Transform3D(1.83923, 1.50661, -1.05494, -1.83923, 1.50661, -1.05494, 0, 1.49191, 2.13067, 0.000438688, 0.000438688, 0.000434408)
+shadow_enabled = true
+shadow_normal_bias = 0.0
+shadow_blur = 4.0
+omni_range = 10.0
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_h6fq2")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -1,0 +1,361 @@
+[gd_scene load_steps=16 format=3 uid="uid://dy5esg3jp8w41"]
+
+[ext_resource type="Script" uid="uid://b4sqgrbc5xt37" path="res://level objects/object scripts/player.gd" id="1_4flbx"]
+[ext_resource type="FontFile" uid="uid://bamnh4btmynt1" path="res://Tomorrow-Regular.ttf" id="2_cnrjc"]
+[ext_resource type="AudioStream" uid="uid://d3wqaglsd4l0a" path="res://Audio/sfx/11L-a_quick_footstep-1755663567080.ogg" id="3_cnrjc"]
+[ext_resource type="Texture2D" uid="uid://b8h1ynxwcxf8o" path="res://maxresdefault.jpg" id="4_gqe3r"]
+[ext_resource type="AudioStream" uid="uid://wapqbly1ta28" path="res://Audio/sfx/sypherpk.wav" id="5_lein8"]
+[ext_resource type="Material" uid="uid://wew0km0e3tmr" path="res://Shaders/glitch.tres" id="6_vtiqs"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_onrkg"]
+height = 3.5
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_sh265"]
+radius = 0.75
+height = 3.75
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4flbx"]
+radius = 1.0
+height = 4.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4flbx"]
+radius = 0.75
+height = 1.75
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_onrkg"]
+radius = 1.0
+
+[sub_resource type="Shader" id="Shader_lein8"]
+code = "shader_type spatial;
+render_mode unshaded;
+
+// MIT License
+// Made by Leo Peltola
+// Perspective adjustments by Riley Evans
+// https://godotshaders.com/shader/3d-pixel-art-outline-highlight-post-processing-shader/
+// Inspired by https://threejs.org/examples/webgl_postprocessing_pixel.html
+
+
+uniform sampler2D DEPTH_TEXTURE : hint_depth_texture, filter_nearest;
+uniform sampler2D SCREEN_TEXTURE : hint_screen_texture, filter_nearest;
+uniform sampler2D NORMAL_TEXTURE : hint_normal_roughness_texture, filter_nearest;
+
+uniform bool shadows_enabled = true;
+uniform bool highlights_enabled = true;
+uniform float shadow_strength : hint_range(0.0, 1.0, 0.01) = 0.4;
+uniform float highlight_strength : hint_range(0.0, 1.0, 0.01) = 0.1;
+uniform vec3 highlight_color : source_color = vec3(1.);
+uniform vec3 shadow_color : source_color = vec3(0.0);
+
+uniform bool is_perspective_camera = true;
+
+varying mat4 model_view_matrix;
+
+
+float getDepth(vec2 screen_uv, sampler2D depth_texture, mat4 inv_projection_matrix){
+	//	Credit: https://godotshaders.com/shader/depth-modulated-pixel-outline-in-screen-space/
+	float raw_depth = texture(depth_texture, screen_uv)[0];
+	vec3 normalized_device_coordinates = vec3(screen_uv * 2.0 - 1.0, raw_depth);
+    vec4 view_space = inv_projection_matrix * vec4(normalized_device_coordinates, 1.0);
+	view_space.xyz /= view_space.w;
+	return -view_space.z;
+}
+
+float normalIndicator(vec3 normalEdgeBias, vec3 baseNormal, vec3 newNormal, float depth_diff){
+	// Credit: https://threejs.org/examples/webgl_postprocessing_pixel.html
+	float normalDiff = dot(baseNormal - newNormal, normalEdgeBias);
+	float normalIndicator = clamp(smoothstep(-.01, .01, normalDiff), 0.0, 1.0);
+	float depthIndicator = clamp(sign(depth_diff * .25 + .0025), 0.0, 1.0);
+	return (1.0 - dot(baseNormal, newNormal)) * depthIndicator * normalIndicator;
+}
+
+void vertex() {
+    model_view_matrix = VIEW_MATRIX * mat4(INV_VIEW_MATRIX[0], INV_VIEW_MATRIX[1], INV_VIEW_MATRIX[2], MODEL_MATRIX[3]);
+	POSITION = vec4(VERTEX.xy, 1.0, 1.0);
+}
+
+void fragment() {
+	vec2 e = vec2(1./VIEWPORT_SIZE.xy);
+
+	//	Shadows
+	float depth_diff = 0.0;
+	float neg_depth_diff = .5;
+	if (shadows_enabled) {
+		float depth = getDepth(SCREEN_UV, DEPTH_TEXTURE, INV_PROJECTION_MATRIX);
+		float du = getDepth(SCREEN_UV+vec2(0., -1.)*e, DEPTH_TEXTURE, INV_PROJECTION_MATRIX);
+		float dr = getDepth(SCREEN_UV+vec2(1., 0.)*e, DEPTH_TEXTURE, INV_PROJECTION_MATRIX);
+		float dd = getDepth(SCREEN_UV+vec2(0., 1.)*e, DEPTH_TEXTURE, INV_PROJECTION_MATRIX);
+		float dl = getDepth(SCREEN_UV+vec2(-1., 0.)*e, DEPTH_TEXTURE, INV_PROJECTION_MATRIX);
+
+		float clamp_min = is_perspective_camera ? -1. : 0.;
+		depth_diff += clamp(du - depth, clamp_min, 1.);
+		depth_diff += clamp(dd - depth, clamp_min, 1.);
+		depth_diff += clamp(dr - depth, clamp_min, 1.);
+		depth_diff += clamp(dl - depth, clamp_min, 1.);
+		neg_depth_diff += depth - du;
+		neg_depth_diff += depth - dd;
+		neg_depth_diff += depth - dr;
+		neg_depth_diff += depth - dl;
+
+		neg_depth_diff = clamp(neg_depth_diff, 0., 1.);
+		neg_depth_diff = clamp(smoothstep(0.5, 0.5, neg_depth_diff)*10., 0., 1.);
+		depth_diff = smoothstep(0.2, 0.3, depth_diff);
+		//ALBEDO = vec3(neg_depth_diff);
+	}
+
+//	Highlights
+	float normal_diff = 0.;
+	if (highlights_enabled) {
+		vec3 normal = texture(NORMAL_TEXTURE, SCREEN_UV).rgb * 2.0 - 1.0;
+		vec3 nu = texture(NORMAL_TEXTURE, SCREEN_UV+vec2(0., -1.)*e).rgb * 2.0 - 1.0;
+		vec3 nr = texture(NORMAL_TEXTURE, SCREEN_UV+vec2(1., 0.)*e).rgb * 2.0 - 1.0;
+		vec3 nd = texture(NORMAL_TEXTURE, SCREEN_UV+vec2(0., 1.)*e).rgb * 2.0 - 1.0;
+		vec3 nl = texture(NORMAL_TEXTURE, SCREEN_UV+vec2(-1., 0.)*e).rgb * 2.0 - 1.0;
+		vec3 normal_edge_bias = (vec3(1., 1., 1.));
+		normal_diff += normalIndicator(normal_edge_bias, normal, nu, depth_diff);
+		normal_diff += normalIndicator(normal_edge_bias, normal, nr, depth_diff);
+		normal_diff += normalIndicator(normal_edge_bias, normal, nd, depth_diff);
+		normal_diff += normalIndicator(normal_edge_bias, normal, nl, depth_diff);
+		normal_diff = smoothstep(0.2, 0.8, normal_diff);
+		normal_diff = clamp(normal_diff-neg_depth_diff, 0., 1.);
+		//ALBEDO = vec3(normal_diff);
+	}
+
+
+	vec3 original_color = texture(SCREEN_TEXTURE, SCREEN_UV).rgb;
+	vec3 final_highlight_color = mix(original_color, highlight_color, highlight_strength);
+	vec3 final_shadow_color = mix(original_color, shadow_color, shadow_strength);
+	vec3 final = original_color;
+	if (highlights_enabled) {
+		final = mix(final, final_highlight_color, normal_diff);
+	}
+	if (shadows_enabled) {
+		final = mix(final, final_shadow_color, depth_diff);
+	}
+	ALBEDO = final;
+
+	float alpha_mask = depth_diff * float(shadows_enabled) + normal_diff * float(highlights_enabled);
+	ALPHA = clamp((alpha_mask) * 5., 0., 1.);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vtiqs"]
+render_priority = 0
+shader = SubResource("Shader_lein8")
+shader_parameter/shadows_enabled = true
+shader_parameter/highlights_enabled = true
+shader_parameter/shadow_strength = 0.999999977648
+shader_parameter/highlight_strength = 0.999999977648
+shader_parameter/highlight_color = Color(0, 0, 0, 1)
+shader_parameter/shadow_color = Color(0, 0, 0, 1)
+shader_parameter/is_perspective_camera = true
+
+[sub_resource type="QuadMesh" id="QuadMesh_lein8"]
+material = SubResource("ShaderMaterial_vtiqs")
+flip_faces = true
+size = Vector2(2, 2)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_lein8"]
+bounce = 0.45
+
+[node name="Player" type="CharacterBody3D"]
+collision_mask = 2
+floor_stop_on_slope = false
+floor_max_angle = 1.39626
+floor_snap_length = 0.5
+safe_margin = 0.05
+script = ExtResource("1_4flbx")
+
+[node name="CrouchFix" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+collision_layer = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CrouchFix"]
+shape = SubResource("CapsuleShape3D_onrkg")
+
+[node name="Standing" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_sh265")
+
+[node name="Standing" type="MeshInstance3D" parent="Standing"]
+mesh = SubResource("CapsuleMesh_4flbx")
+skeleton = NodePath("../..")
+
+[node name="Crounched" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("CapsuleShape3D_4flbx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crounched"]
+mesh = SubResource("CapsuleMesh_onrkg")
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00321567, 1.04037, -0.00202847)
+current = true
+fov = 37.8493
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, -1)
+mesh = SubResource("QuadMesh_lein8")
+
+[node name="ForwardMark" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+
+[node name="LeftwardMark" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
+
+[node name="UiDashes" type="Label" parent="."]
+offset_left = 11.0
+offset_top = 5.0
+offset_right = 122.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_cnrjc")
+theme_override_font_sizes/font_size = 25
+text = "1⁄1"
+
+[node name="UiScore" type="Label" parent="."]
+offset_left = 11.0
+offset_top = 593.0
+offset_right = 122.0
+offset_bottom = 626.0
+theme_override_colors/font_color = Color(0, 0.392157, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_cnrjc")
+theme_override_font_sizes/font_size = 25
+text = "null"
+
+[node name="UiJumps" type="Label" parent="."]
+offset_left = 11.0
+offset_top = 29.0
+offset_right = 151.0
+offset_bottom = 62.0
+theme_override_colors/font_color = Color(1, 0, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_cnrjc")
+theme_override_font_sizes/font_size = 25
+text = "1⁄1"
+
+[node name="UiStamina" type="Label" parent="."]
+offset_left = 11.0
+offset_top = 53.0
+offset_right = 151.0
+offset_bottom = 86.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_cnrjc")
+theme_override_font_sizes/font_size = 25
+text = "100%"
+
+[node name="Verson Lable" type="Label" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -176.0
+offset_top = -62.029
+offset_bottom = -0.0289917
+theme_override_font_sizes/font_size = 11
+text = "--Version--"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="Center" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(573, 324, 574, 326, 576, 327, 578, 326, 579, 324, 578, 322, 576, 321, 574, 322)
+
+[node name="Forward" type="Polygon2D" parent="Center"]
+polygon = PackedVector2Array(574, 320, 576, 319, 578, 320, 578, 321, 576, 320, 574, 321)
+
+[node name="Backward" type="Polygon2D" parent="Center"]
+polygon = PackedVector2Array(574, 327, 576, 328, 578, 327, 578, 328, 576, 329, 574, 328)
+
+[node name="Left" type="Polygon2D" parent="Center"]
+polygon = PackedVector2Array(573, 322, 572, 324, 573, 326, 572, 326, 571, 324, 572, 322)
+
+[node name="Right" type="Polygon2D" parent="Center"]
+polygon = PackedVector2Array(579, 322, 580, 324, 579, 326, 580, 326, 581, 324, 580, 322)
+
+[node name="UiLives" type="Node2D" parent="."]
+position = Vector2(12, 623)
+
+[node name="Slide" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+
+[node name="Dash" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+
+[node name="Cyotee" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+
+[node name="InputBuffer" type="Timer" parent="."]
+process_callback = 0
+
+[node name="DeathShader" type="ColorRect" parent="."]
+material = ExtResource("6_vtiqs")
+offset_right = 1152.0
+offset_bottom = 648.0
+mouse_filter = 2
+metadata/_edit_lock_ = true
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_cnrjc")
+max_polyphony = 5
+bus = &"Sfx"
+
+[node name="FootstepInterval" type="Timer" parent="AudioStreamPlayer3D"]
+process_callback = 0
+one_shot = true
+
+[node name="Maxresdefault" type="Sprite2D" parent="."]
+self_modulate = Color(1, 1, 1, 0)
+position = Vector2(576, 323.996)
+scale = Vector2(0.9, 0.89999)
+texture = ExtResource("4_gqe3r")
+metadata/_edit_lock_ = true
+
+[node name="Timer" type="Timer" parent="Maxresdefault"]
+one_shot = true
+
+[node name="Sypherpk" type="AudioStreamPlayer" parent="Maxresdefault"]
+stream = ExtResource("5_lein8")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+visible = false
+collision_layer = 0
+collision_mask = 2
+input_ray_pickable = false
+mass = 34.674
+physics_material_override = SubResource("PhysicsMaterial_lein8")
+freeze = true
+freeze_mode = 1
+
+[node name="Standing" type="MeshInstance3D" parent="RigidBody3D"]
+mesh = SubResource("CapsuleMesh_4flbx")
+skeleton = NodePath("../..")
+
+[node name="Camera3D" type="Camera3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="RigidBody3D/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0.00321567, 0.040369987, -1.0020285)
+mesh = SubResource("QuadMesh_lein8")
+skeleton = NodePath("../../../Camera")
+
+[node name="Standing2" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("CapsuleShape3D_sh265")
+
+[node name="Death Anim" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+ignore_time_scale = true
+
+[node name="Death Anim Dir" type="Marker3D" parent="Death Anim"]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Negative Anim Dir" type="Marker3D" parent="Death Anim/Death Anim Dir"]
+transform = Transform3D(1, 0, 0, -2.9802322e-08, 1, 2.9802322e-08, 0, 0, 1, 0, 0, -1)
+
+[connection signal="timeout" from="Death Anim" to="." method="_on_death_anim_timeout"]
