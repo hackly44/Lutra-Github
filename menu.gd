@@ -7,6 +7,7 @@ func _on_button_pressed() -> void:
 	$AudioStreamPlayer.play()
 	get_tree().change_scene_to_file("res://maps/startroom.tscn")
 	Globals.lives = 3
+	Globals.level = 0
 
 func _on_test_play_pressed() -> void:
 	$AudioStreamPlayer.play()
@@ -19,3 +20,6 @@ func _process(_delta: float) -> void:
 
 	$Panel/FOVPanel/FOVValue.text = str($Panel/FOVPanel/FOV.value)
 	$Panel/SensitivityPanel/SensitivityValue.text = str($Panel/SensitivityPanel/Sensitivity.value)
+
+	if Input.is_action_just_pressed("o"):
+		pass

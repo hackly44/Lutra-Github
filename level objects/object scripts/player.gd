@@ -1,5 +1,25 @@
 extends CharacterBody3D
 
+'''
+Message to self:
+----------------------------------------------------------------------------
+| Just make it work, they said. Mabie you should do that instead of making |
+| asci art of messages to yourself "from the future" and lock in. I mean,  |
+| you havent even touched Lutra in a month, what are you doing? LOCK IN    |
+|                                                           - Regards, You |
+----------------------------------------------------------------------------
+Message recived: 11/17/2025, 3:22 AM
+
+
+Message to self:
+----------------------------------------------------
+| ORGANIZE YOUR CODE YOU FUCKING MESSY PRICK!!!!!! |
+| (and your asci art isnt helping)                 |
+|                                   - Regards, You |
+----------------------------------------------------
+Message recived:  1/20/2026, 7:38 PM
+'''
+
 #region -- Consts
 const lifeIcon = preload("res://lifeIcon.tscn")
 
@@ -92,9 +112,10 @@ func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	spawn = position
 	$RigidBody3D.gravity_scale = gravityStrenth
-	$"Verson Lable".text = Globals.version
+	$"Ui/Verson Lable".text = Globals.version
 	$DeathShader.hide()
 	reload()
+	$Ui/Upgrade.hide()
 
 
 # can prob move to _physics_process
@@ -140,27 +161,37 @@ func _physics_process(delta):
 #region -- Hud
 	var forwardSpeed = -((velocity.x * forwardDirection.x) + (velocity.z * forwardDirection.z))
 	var leftwardSpeed = -((velocity.x * forwardDirection.rotated(Vector3(0,1,0),deg_to_rad(90)).x) + (velocity.z *forwardDirection.rotated(Vector3(0,1,0),deg_to_rad(90)).z))
-	$Center/Forward.position.y = forwardSpeed
-	if $Center/Forward.position.y > 0: $Center/Forward.position.y = 0
-	$Center/Backward.position.y = forwardSpeed
-	if $Center/Backward.position.y < 0: $Center/Backward.position.y = 0
+	$Ui/Center/Forward.position.y = forwardSpeed
+	if $Ui/Center/Forward.position.y > 0: $Ui/Center/Forward.position.y = 0
+	$Ui/Center/Backward.position.y = forwardSpeed
+	if $Ui/Center/Backward.position.y < 0: $Ui/Center/Backward.position.y = 0
 
-	$UiDashes.text = str(activeJumps.size(), "⁄", jumpSlots)
-	$UiJumps.text = str(activeDashes.size(), "⁄", dashSlots)
-	$UiScore.text = str(activeGoals.size(), "/", str(Globals.quota))
+	$Ui/UiDashes.text = str(activeJumps.size(), "⁄", jumpSlots)
+	$Ui/UiJumps.text = str(activeDashes.size(), "⁄", dashSlots)
+	$Ui/UiScore.text = str(activeGoals.size(), "⁄", str(Globals.quota))
 	@warning_ignore("integer_division")
-	$UiStamina.text = str(roundi((stamina / maxStamina) * 100), "%")
+	$Ui/UiStamina.text = str(roundi((stamina / maxStamina) * 100), "%")
+	$Ui/UiLevel.text = str(Globals.level)
 
-	$Center/Left.position.x = leftwardSpeed
-	if $Center/Left.position.x > 0: $Center/Left.position.x = 0
-	$Center/Right.position.x = leftwardSpeed
-	if $Center/Right.position.x < 0: $Center/Right.position.x = 0
+	$Ui/Center/Left.position.x = leftwardSpeed
+	if $Ui/Center/Left.position.x > 0: $Ui/Center/Left.position.x = 0
+	$Ui/Center/Right.position.x = leftwardSpeed
+	if $Ui/Center/Right.position.x < 0: $Ui/Center/Right.position.x = 0
 
-	if Input.is_action_just_pressed("esc"):
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED: Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		else: Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	if not $Ui/Upgrade.visible:
+		if Input.is_action_just_pressed("esc"):
+			if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			else:
+				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	else:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 	Globals.score = activeGoals.size()
+
+	if Globals.intermission:
+		$Ui/Upgrade.show()
+		Globals.intermission = false
 #endregion
 
 #region -- Shaders
@@ -418,13 +449,17 @@ func reload() -> void:
 	$RigidBody3D.angular_velocity = Vector3(0, 0, 0)
 	$Standing.disabled = false
 	$Crounched.disabled = false
-	for i in $UiLives.get_children():
+	for i in $Ui/UiLives.get_children():
 		i.queue_free()
 	for i in range(Globals.lives):
-		inst(lifeIcon, Vector2((i * 20), 0), $UiLives)
+		inst(lifeIcon, Vector2((i * 20), 0), $Ui/UiLives)
 
 
 func inst(node, pos, parent)  -> void:
 	var instance = node.instantiate()
 	instance.position = pos
 	parent.add_child(instance)
+
+
+func _on_continue_pressed() -> void:
+	Globals.continued = true

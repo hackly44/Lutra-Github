@@ -22,11 +22,19 @@ var errBuffer = 4
 
 #region -- Generation Passes
 var generationPasses = 5
-var enemyPasses = 0
-var itemPasses = 0
+var enemyPasses = 1
+var itemPasses = 1
 #endregion
 
 func _ready():
+
+	Globals.level += 1
+
+	generationPasses = Globals.f1(Globals.level)
+	Globals.quota = Globals.f2(Globals.level)
+	enemyPasses = Globals.f3(Globals.level)
+	itemPasses = Globals.f4(Globals.level)
+
 ## Generate Rooms
 	while not (generationPasses <= 0 or findOpen().size() == 0 or err > errBuffer):
 		var gen = 0
@@ -65,29 +73,27 @@ func _ready():
 		var root = enemySpawns.pick_random()
 		var enemy = enemys.pick_random()
 		inst(enemy, root.global_position, Vector3(0, 0, 0))
-		enemySpawns.remove_at(enemySpawns.find(root))
+		enemySpawns.erase(root)
 
-## Generate Items
+## Find all open item spawns
 	for i in rooms:
 		if i.get_child(3).get_child_count() != 0:
 			for j in i.get_child(3).get_children():
 				itemSpawns.append(j)
+
+## Generate Items
 	for i in range(itemPasses):
 		var root = itemSpawns.pick_random()
 		var item = items.pick_random()
 		inst(item, root.global_position, root.global_rotation)
-		itemSpawns.remove_at(itemSpawns.find(root))
+		itemSpawns.erase(root)
 
 ## Generate Goals
-	for i in rooms:
-		if i.get_child(3).get_child_count() != 0:
-			for j in i.get_child(3).get_children():
-				itemSpawns.append(j)
-	for i in range(int(Globals.quota * randf_range(1.5, 2.0))):
+	for i in range(int(Globals.quota * randf_range(1.0, 1.5))):
 		#print(i)
 		var root = itemSpawns.pick_random()
 		inst(goal, root.global_position, root.global_rotation)
-		itemSpawns.remove_at(itemSpawns.find(root))
+		itemSpawns.erase(root)
 
 ## Instancer for rooms
 func instRoom(node, pos, rot):
@@ -133,9 +139,15 @@ func randArray(x):
 
 var fEnter = true
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if Globals.deathAnim:
 		fEnter = true
+	if Globals.continued:
+		Globals.continued = false
+
+		Globals.lives = 3
+
+		get_tree().reload_current_scene()
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body == Globals.player:
@@ -143,4 +155,5 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 			fEnter = false
 		else:
 			if Globals.score >= Globals.quota:
-				get_tree().reload_current_scene()
+				print("level passed")
+				Globals.intermission = true

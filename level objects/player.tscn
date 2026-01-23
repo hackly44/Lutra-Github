@@ -202,7 +202,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 [node name="LeftwardMark" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
 
-[node name="UiDashes" type="Label" parent="."]
+[node name="Ui" type="Node2D" parent="."]
+
+[node name="UiDashes" type="Label" parent="Ui"]
 offset_left = 11.0
 offset_top = 5.0
 offset_right = 122.0
@@ -211,9 +213,9 @@ theme_override_colors/font_color = Color(1, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 25
-text = "1⁄1"
+text = "null"
 
-[node name="UiScore" type="Label" parent="."]
+[node name="UiScore" type="Label" parent="Ui"]
 offset_left = 11.0
 offset_top = 593.0
 offset_right = 122.0
@@ -224,7 +226,18 @@ theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 25
 text = "null"
 
-[node name="UiJumps" type="Label" parent="."]
+[node name="UiLevel" type="Label" parent="Ui"]
+offset_left = 12.0
+offset_top = 577.0
+offset_right = 123.0
+offset_bottom = 610.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_cnrjc")
+theme_override_font_sizes/font_size = 18
+text = "null"
+
+[node name="UiJumps" type="Label" parent="Ui"]
 offset_left = 11.0
 offset_top = 29.0
 offset_right = 151.0
@@ -233,9 +246,9 @@ theme_override_colors/font_color = Color(1, 0, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 25
-text = "1⁄1"
+text = "null"
 
-[node name="UiStamina" type="Label" parent="."]
+[node name="UiStamina" type="Label" parent="Ui"]
 offset_left = 11.0
 offset_top = 53.0
 offset_right = 151.0
@@ -244,39 +257,52 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 25
-text = "100%"
+text = "null"
 
-[node name="Verson Lable" type="Label" parent="."]
+[node name="Verson Lable" type="Label" parent="Ui"]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -176.0
-offset_top = -62.029
-offset_bottom = -0.0289917
+offset_left = 976.0
+offset_top = 585.971
+offset_right = 1152.0
+offset_bottom = 647.971
+grow_horizontal = 0
+grow_vertical = 0
 theme_override_font_sizes/font_size = 11
 text = "--Version--"
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="Center" type="Polygon2D" parent="."]
+[node name="Center" type="Polygon2D" parent="Ui"]
 polygon = PackedVector2Array(573, 324, 574, 326, 576, 327, 578, 326, 579, 324, 578, 322, 576, 321, 574, 322)
 
-[node name="Forward" type="Polygon2D" parent="Center"]
+[node name="Forward" type="Polygon2D" parent="Ui/Center"]
 polygon = PackedVector2Array(574, 320, 576, 319, 578, 320, 578, 321, 576, 320, 574, 321)
 
-[node name="Backward" type="Polygon2D" parent="Center"]
+[node name="Backward" type="Polygon2D" parent="Ui/Center"]
 polygon = PackedVector2Array(574, 327, 576, 328, 578, 327, 578, 328, 576, 329, 574, 328)
 
-[node name="Left" type="Polygon2D" parent="Center"]
+[node name="Left" type="Polygon2D" parent="Ui/Center"]
 polygon = PackedVector2Array(573, 322, 572, 324, 573, 326, 572, 326, 571, 324, 572, 322)
 
-[node name="Right" type="Polygon2D" parent="Center"]
+[node name="Right" type="Polygon2D" parent="Ui/Center"]
 polygon = PackedVector2Array(579, 322, 580, 324, 579, 326, 580, 326, 581, 324, 580, 322)
 
-[node name="UiLives" type="Node2D" parent="."]
+[node name="UiLives" type="Node2D" parent="Ui"]
 position = Vector2(12, 623)
+
+[node name="Upgrade" type="Node2D" parent="Ui"]
+visible = false
+
+[node name="Continue" type="Button" parent="Ui/Upgrade"]
+offset_left = 523.0
+offset_top = 348.0
+offset_right = 629.0
+offset_bottom = 380.0
+text = "Continue"
 
 [node name="Slide" type="Timer" parent="."]
 process_callback = 0
@@ -294,6 +320,7 @@ one_shot = true
 process_callback = 0
 
 [node name="DeathShader" type="ColorRect" parent="."]
+visible = false
 material = ExtResource("6_vtiqs")
 offset_right = 1152.0
 offset_bottom = 648.0
@@ -358,4 +385,5 @@ transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 [node name="Negative Anim Dir" type="Marker3D" parent="Death Anim/Death Anim Dir"]
 transform = Transform3D(1, 0, 0, -2.9802322e-08, 1, 2.9802322e-08, 0, 0, 1, 0, 0, -1)
 
+[connection signal="pressed" from="Ui/Upgrade/Continue" to="." method="_on_continue_pressed"]
 [connection signal="timeout" from="Death Anim" to="." method="_on_death_anim_timeout"]
