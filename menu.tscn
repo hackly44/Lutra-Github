@@ -1,17 +1,12 @@
 [gd_scene load_steps=5 format=3 uid="uid://dvmie2grolkmd"]
 
 [ext_resource type="Script" uid="uid://cg36wrlxwxmpg" path="res://menu.gd" id="1_mae5d"]
-[ext_resource type="Texture2D" uid="uid://bs4qxqhjssiu6" path="res://lutratitle.png" id="1_ouk20"]
 [ext_resource type="FontFile" uid="uid://bamnh4btmynt1" path="res://Tomorrow-Regular.ttf" id="2_mae5d"]
 [ext_resource type="AudioStream" uid="uid://cqb1nen618xc5" path="res://Audio/sfx/11L-a_medium_pitched_men-1755663718224.ogg" id="4_4hy44"]
+[ext_resource type="Texture2D" uid="uid://cy7thw5a5bc7" path="res://banner.png" id="4_ytr4m"]
 
 [node name="Menu" type="Node2D"]
 script = ExtResource("1_mae5d")
-
-[node name="Lutratitle" type="Sprite2D" parent="."]
-position = Vector2(145.498, 78.5)
-scale = Vector2(0.179019, 0.179019)
-texture = ExtResource("1_ouk20")
 
 [node name="Play" type="Button" parent="."]
 offset_left = 16.0
@@ -158,6 +153,11 @@ theme_override_font_sizes/font_size = 11
 text = "--Version--"
 horizontal_alignment = 2
 vertical_alignment = 2
+
+[node name="Banner" type="Sprite2D" parent="."]
+position = Vector2(267, 80)
+scale = Vector2(0.7893082, 0.7893082)
+texture = ExtResource("4_ytr4m")
 
 [connection signal="pressed" from="Play" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="TestPlay" to="." method="_on_test_play_pressed"]

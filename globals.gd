@@ -12,7 +12,7 @@ var quota = 3
 var FOV = 70
 var Snesitivity = 1
 
-const version = "Lutra v0.11.7\nhackly44 2026"
+const version = "Lutra v0.11.9\nhackly44 2026"
 
 var deathAnim = false
 

@@ -276,6 +276,23 @@ text = "--Version--"
 horizontal_alignment = 2
 vertical_alignment = 2
 
+[node name="UiDebug" type="Label" parent="Ui"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 488.0
+offset_top = 585.971
+offset_right = 664.0
+offset_bottom = 647.971
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 11
+text = "Debug Info"
+horizontal_alignment = 1
+vertical_alignment = 2
+
 [node name="Center" type="Polygon2D" parent="Ui"]
 polygon = PackedVector2Array(573, 324, 574, 326, 576, 327, 578, 326, 579, 324, 578, 322, 576, 321, 574, 322)
 

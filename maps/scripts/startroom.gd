@@ -75,24 +75,29 @@ func _ready():
 		inst(enemy, root.global_position, Vector3(0, 0, 0))
 		enemySpawns.erase(root)
 
-## Find all open item spawns
+## Find all open item / goal spawns
 	for i in rooms:
 		if i.get_child(3).get_child_count() != 0:
 			for j in i.get_child(3).get_children():
 				itemSpawns.append(j)
-
-## Generate Items
-	for i in range(itemPasses):
-		var root = itemSpawns.pick_random()
-		var item = items.pick_random()
-		inst(item, root.global_position, root.global_rotation)
-		itemSpawns.erase(root)
 
 ## Generate Goals
 	for i in range(int(Globals.quota * randf_range(1.0, 1.5))):
 		#print(i)
 		var root = itemSpawns.pick_random()
 		inst(goal, root.global_position, root.global_rotation)
+		itemSpawns.erase(root)
+
+## Generate Items
+	var passes = 0
+	if itemPasses < itemSpawns.size():
+		passes = itemPasses
+	else:
+		passes = itemSpawns.size()
+	for i in range(passes):
+		var root = itemSpawns.pick_random()
+		var item = items.pick_random()
+		inst(item, root.global_position, root.global_rotation)
 		itemSpawns.erase(root)
 
 ## Instancer for rooms
