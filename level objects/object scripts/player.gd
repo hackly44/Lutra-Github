@@ -192,6 +192,8 @@ func _physics_process(delta):
 	if Globals.intermission:
 		$Ui/Upgrade.show()
 		Globals.intermission = false
+
+	$Ui/UiDebug.text = str(Globals.score >= Globals.quota) + '\n' + str(Globals.score) + '/' + str(Globals.quota)
 #endregion
 
 #region -- Shaders
