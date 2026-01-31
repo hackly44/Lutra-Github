@@ -1,7 +1,7 @@
 extends CharacterBody3D
 
 '''
-Message to self:
+Message from SELF:
 ----------------------------------------------------------------------------
 | Just make it work, they said. Mabie you should do that instead of making |
 | asci art of messages to yourself "from the future" and lock in. I mean,  |
@@ -11,7 +11,7 @@ Message to self:
 Message recived: 11/17/2025, 3:22 AM
 
 
-Message to self:
+Message from SELF:
 ----------------------------------------------------
 | ORGANIZE YOUR CODE YOU FUCKING MESSY PRICK!!!!!! |
 | (and your asci art isnt helping)                 |
@@ -68,7 +68,6 @@ const runFootInterval = 0.3
 #endregion
 
 ## for the love of god, organize this shit eventually
-#  do you even need all of this bullshit?
 #region -- Variables
 var trueDirection = Vector3()
 var speed = 0.0
@@ -89,18 +88,16 @@ var dashing = false
 var befVelocity1 = 0
 var befVelocity2 = Vector3()
 var footInterval = 0.5
+var allowInput = true
 
 ## Settings
 var mouseSens = 0.0
 
 ## Upgradables / Default Values
-var dashSlots = 1
 var activeDashes = []
-var jumpSlots = 1
 var activeJumps = []
 var activeGoals = []
-var maxStamina = 50
-var stamina = 100
+var stamina = Globals.maxStamina
 var staminaRegen = 5
 var idleRegen = 8
 #endregion
@@ -134,15 +131,12 @@ func _physics_process(delta):
 
 	$Camera.fov = Globals.FOV
 
-	if position.y < -30:
-		damage()
+	#if position.y < -30:
+		#damage()
 
 	if is_on_ceiling():
 		position.y += -0.001
 		velocity.y = -0.5
-
-	if Input.is_action_just_pressed("enter"):
-		damage()
 
 #region -- SypherPk Flashbang
 	if Input.is_action_just_pressed("sypherpk"):
@@ -166,12 +160,28 @@ func _physics_process(delta):
 	$Ui/Center/Backward.position.y = forwardSpeed
 	if $Ui/Center/Backward.position.y < 0: $Ui/Center/Backward.position.y = 0
 
-	$Ui/UiDashes.text = str(activeJumps.size(), "⁄", jumpSlots)
-	$Ui/UiJumps.text = str(activeDashes.size(), "⁄", dashSlots)
+	$Ui/Center/Cross.position = Vector2(leftwardSpeed, forwardSpeed) * 2
+
+	if Vector2(leftwardSpeed, forwardSpeed) != Vector2(0, 0):
+		$Ui/Center/Direction.show()
+		$Ui/Center/Direction.look_at(Vector2(leftwardSpeed + 576.0, forwardSpeed + 324.0))
+	else:
+		$Ui/Center/Direction.hide()
+
+	$Ui/UiDashes.text = str(activeJumps.size(), "⁄", Globals.jumpSlots)
+	$Ui/UiJumps.text = str(activeDashes.size(), "⁄", Globals.dashSlots)
 	$Ui/UiScore.text = str(activeGoals.size(), "⁄", str(Globals.quota))
 	@warning_ignore("integer_division")
-	$Ui/UiStamina.text = str(roundi((stamina / maxStamina) * 100), "%")
+	$Ui/UiStamina.text = str(roundi((stamina / Globals.maxStamina) * 100), "%")
+	#$Ui/UiStamina.text = str(stamina) + '/' + str(Globals.maxStamina)
 	$Ui/UiLevel.text = str(Globals.level)
+
+	$Ui/Upgrade/UpMoney.text = str(Globals.money)
+	$Ui/Upgrade/UpJump.text = '+1 Jump \n' + str(Globals.money) + '/' + str(Globals.jumpCost)
+	$Ui/Upgrade/UpDash.text = '+1 Dash \n' + str(Globals.money) + '/' + str(Globals.dashCost)
+	$Ui/Upgrade/UpLife.text = '+1 Life \n' + str(Globals.money) + '/' + str(Globals.lifeCost)
+	$Ui/Upgrade/UpRun.text = '+25 Stamina \n' + str(Globals.money) + '/' + str(Globals.runCost)
+
 
 	$Ui/Center/Left.position.x = leftwardSpeed
 	if $Ui/Center/Left.position.x > 0: $Ui/Center/Left.position.x = 0
@@ -191,7 +201,9 @@ func _physics_process(delta):
 
 	if Globals.intermission:
 		$Ui/Upgrade.show()
+		Globals.money += Globals.score - Globals.quota
 		Globals.intermission = false
+		allowInput = false
 
 	$Ui/UiDebug.text = str(Globals.score >= Globals.quota) + '\n' + str(Globals.score) + '/' + str(Globals.quota)
 #endregion
@@ -341,7 +353,12 @@ func _physics_process(delta):
 	else:
 		realDirection = velocity / realSpeed
 
-	var rawInput := Input.get_vector("left", "right", "forward", "backward")
+	var rawInput : Vector2
+
+	if allowInput:
+		rawInput = Input.get_vector("left", "right", "forward", "backward")
+	else:
+		rawInput = Vector2(0, 0)
 	var velocityFoward : Vector3 = $".".global_basis.z
 	var velocityRight : Vector3 = $".".global_basis.x
 
@@ -351,7 +368,7 @@ func _physics_process(delta):
 
 	if Input.is_action_pressed("sprint"):
 		stamina += -runningCost * delta
-	elif stamina < maxStamina:
+	elif stamina < Globals.maxStamina:
 		if velocity == Vector3(0,0,0):
 			stamina += idleRegen * delta
 		else:
@@ -360,8 +377,8 @@ func _physics_process(delta):
 	if stamina < 0:
 		stamina = 0
 
-	if stamina > maxStamina:
-		stamina = maxStamina
+	if stamina > Globals.maxStamina:
+		stamina = Globals.maxStamina
 
 	trueDirection = velocityFoward * rawInput.y + velocityRight * rawInput.x
 	trueDirection.y = 0.0
@@ -376,10 +393,6 @@ func _physics_process(delta):
 		for i in velocityMult:
 			move_and_slide()
 #endregion
-
-	if Input.is_action_just_pressed("enter"):
-		damage()
-
 
 func jumpCrystal(body) -> void:
 	activeJumps.append(body)
@@ -428,8 +441,6 @@ func _on_death_anim_timeout() -> void:
 	else:
 		reload()
 
-		#get_tree().reload_current_scene()
-
 
 func reload() -> void:
 	$Camera.current = true
@@ -465,3 +476,31 @@ func inst(node, pos, parent)  -> void:
 
 func _on_continue_pressed() -> void:
 	Globals.continued = true
+
+
+func _on_up_jump_pressed() -> void:
+	if Globals.money >= Globals.jumpCost:
+		Globals.money -= Globals.jumpCost
+		Globals.jumpSlots += 1
+		Globals.jumpCost += 2
+
+
+func _on_up_dash_pressed() -> void:
+	if Globals.money >= Globals.dashCost:
+		Globals.money -= Globals.dashCost
+		Globals.dashSlots += 1
+		Globals.dashCost += 2
+
+
+func _on_up_life_pressed() -> void:
+	if Globals.money >= Globals.lifeCost:
+		Globals.money -= Globals.lifeCost
+		Globals.startLives += 1
+		Globals.lifeCost += 5
+
+
+func _on_up_run_pressed() -> void:
+	if Globals.money >= Globals.runCost:
+		Globals.money -= Globals.runCost
+		Globals.maxStamina += 25
+		Globals.runCost += 5

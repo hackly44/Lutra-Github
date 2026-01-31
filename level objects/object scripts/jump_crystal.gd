@@ -29,6 +29,6 @@ func _process(delta: float) -> void:
 		transition = move_toward(transition, 0, transitionTime * delta)
 
 func _on_body_entered(body: Node3D) -> void:
-	if body == Globals.player and (not disabled) and Globals.player.activeJumps.size() < Globals.player.jumpSlots:
+	if body == Globals.player and (not disabled) and Globals.player.activeJumps.size() < Globals.jumpSlots:
 		Globals.player.jumpCrystal(self)
 		$AudioStreamPlayer3D.play()

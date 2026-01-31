@@ -1,7 +1,8 @@
 extends Node3D
 
 const midRooms = [preload("res://maps/room_1.tscn"), preload("res://maps/room_2.tscn")]
-const roomChance = [100, 50]
+const roomChance = [3, 1]
+var randiRoom = []
 
 const endRoom = preload("res://maps/endroom.tscn")
 
@@ -19,11 +20,12 @@ var genErr = false
 
 var err = 0
 var errBuffer = 4
+var maxGoalPasses = 100
 
 #region -- Generation Passes
-var generationPasses = 5
-var enemyPasses = 1
-var itemPasses = 1
+var generationPasses = 100
+var enemyPasses = 0
+var itemPasses = 0
 #endregion
 
 func _ready():
@@ -32,14 +34,18 @@ func _ready():
 
 	generationPasses = Globals.f1(Globals.level)
 	Globals.quota = Globals.f2(Globals.level)
-	enemyPasses = Globals.f3(Globals.level)
-	itemPasses = Globals.f4(Globals.level)
+	maxGoalPasses = Globals.f3(Globals.level)
+	enemyPasses = Globals.f4(Globals.level)
+	itemPasses = Globals.f5(Globals.level)
+
+
+	randiRoom = randomSet(midRooms, roomChance)
 
 ## Generate Rooms
 	while not (generationPasses <= 0 or findOpen().size() == 0 or err > errBuffer):
 		var gen = 0
 		for j in range(generationPasses):
-			var room = midRooms[randArray(roomChance)]
+			var room = randiRoom.pick_random()
 			if findOpen().size() == 0:
 				break
 			var root = findOpen().pick_random()
@@ -82,7 +88,7 @@ func _ready():
 				itemSpawns.append(j)
 
 ## Generate Goals
-	for i in range(int(Globals.quota * randf_range(1.0, 1.5))):
+	for i in range(randi_range(Globals.quota, maxGoalPasses)):
 		#print(i)
 		var root = itemSpawns.pick_random()
 		inst(goal, root.global_position, root.global_rotation)
@@ -126,21 +132,16 @@ func findOpen():
 	return(open)
 
 
-func randArray(x):
-	var total = 0
-	var totals = [0]
-	var rand = 0
-	for i in x:
-		total += i
-		totals.append(total)
-	rand = randi_range(0, total - 2)
+## Weighted Random room generator
+func randomSet(value : Array, weight : Array):
+	var arr = []
+	for i in range(value.size()):
+		var x = value[i]
+		for j in range(weight[i]):
+			arr.append(x)
 
-	for i in range(totals.size()):
-		if i < totals.size() - 1:
-			if rand >= totals[i] and rand <= totals[i + 1]:
-				return(i)
-		else:
-			return(i)
+	return(arr)
+
 
 var fEnter = true
 
@@ -150,9 +151,12 @@ func _process(_delta: float) -> void:
 	if Globals.continued:
 		Globals.continued = false
 
-		Globals.lives = 3
+		Globals.lives = Globals.startLives
 
 		get_tree().reload_current_scene()
+
+	#if Input.is_action_just_pressed("enter"):
+		#get_tree().reload_current_scene()
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body == Globals.player:
@@ -160,5 +164,4 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 			fEnter = false
 		else:
 			if Globals.score >= Globals.quota:
-				print("level passed")
 				Globals.intermission = true

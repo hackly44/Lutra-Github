@@ -297,29 +297,81 @@ vertical_alignment = 2
 polygon = PackedVector2Array(573, 324, 574, 326, 576, 327, 578, 326, 579, 324, 578, 322, 576, 321, 574, 322)
 
 [node name="Forward" type="Polygon2D" parent="Ui/Center"]
+visible = false
 polygon = PackedVector2Array(574, 320, 576, 319, 578, 320, 578, 321, 576, 320, 574, 321)
 
 [node name="Backward" type="Polygon2D" parent="Ui/Center"]
+visible = false
 polygon = PackedVector2Array(574, 327, 576, 328, 578, 327, 578, 328, 576, 329, 574, 328)
 
 [node name="Left" type="Polygon2D" parent="Ui/Center"]
+visible = false
 polygon = PackedVector2Array(573, 322, 572, 324, 573, 326, 572, 326, 571, 324, 572, 322)
 
 [node name="Right" type="Polygon2D" parent="Ui/Center"]
+visible = false
 polygon = PackedVector2Array(579, 322, 580, 324, 579, 326, 580, 326, 581, 324, 580, 322)
+
+[node name="Cross" type="Polygon2D" parent="Ui/Center"]
+visible = false
+polygon = PackedVector2Array(574, 324, 576, 326, 578, 324, 576, 322)
+
+[node name="Direction" type="Polygon2D" parent="Ui/Center"]
+position = Vector2(576, 324)
+polygon = PackedVector2Array(5, 0, 3, -4, 4, -4, 6, 0, 4, 4, 3, 4)
 
 [node name="UiLives" type="Node2D" parent="Ui"]
 position = Vector2(12, 623)
 
 [node name="Upgrade" type="Node2D" parent="Ui"]
-visible = false
 
 [node name="Continue" type="Button" parent="Ui/Upgrade"]
 offset_left = 523.0
-offset_top = 348.0
+offset_top = 392.0
 offset_right = 629.0
-offset_bottom = 380.0
+offset_bottom = 424.0
 text = "Continue"
+
+[node name="UpJump" type="Button" parent="Ui/Upgrade"]
+offset_left = 540.0
+offset_top = 332.0
+offset_right = 612.0
+offset_bottom = 388.0
+text = "+1 jump
+1/1"
+
+[node name="UpLife" type="Button" parent="Ui/Upgrade"]
+offset_left = 616.0
+offset_top = 332.0
+offset_right = 688.0
+offset_bottom = 388.0
+text = "+1 Life
+1/1"
+
+[node name="UpRun" type="Button" parent="Ui/Upgrade"]
+offset_left = 524.0
+offset_top = 260.0
+offset_right = 628.0
+offset_bottom = 316.0
+text = "+50 Stamina
+1/1"
+
+[node name="UpDash" type="Button" parent="Ui/Upgrade"]
+offset_left = 464.0
+offset_top = 332.0
+offset_right = 536.0
+offset_bottom = 388.0
+text = "+1 dash
+1/1"
+
+[node name="UpMoney" type="Label" parent="Ui/Upgrade"]
+visible = false
+offset_left = 566.0
+offset_top = 435.0
+offset_right = 606.0
+offset_bottom = 458.0
+text = "1$"
+horizontal_alignment = 1
 
 [node name="Slide" type="Timer" parent="."]
 process_callback = 0
@@ -403,4 +455,8 @@ transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 transform = Transform3D(1, 0, 0, -2.9802322e-08, 1, 2.9802322e-08, 0, 0, 1, 0, 0, -1)
 
 [connection signal="pressed" from="Ui/Upgrade/Continue" to="." method="_on_continue_pressed"]
+[connection signal="pressed" from="Ui/Upgrade/UpJump" to="." method="_on_up_jump_pressed"]
+[connection signal="pressed" from="Ui/Upgrade/UpLife" to="." method="_on_up_life_pressed"]
+[connection signal="pressed" from="Ui/Upgrade/UpRun" to="." method="_on_up_run_pressed"]
+[connection signal="pressed" from="Ui/Upgrade/UpDash" to="." method="_on_up_dash_pressed"]
 [connection signal="timeout" from="Death Anim" to="." method="_on_death_anim_timeout"]

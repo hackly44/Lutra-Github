@@ -28,6 +28,6 @@ func _process(delta: float) -> void:
 		transition = move_toward(transition, 0, transitionTime * delta)
 
 func _on_body_entered(body: Node3D) -> void:
-	if body == Globals.player and (not disabled) and Globals.player.activeDashes.size() < Globals.player.dashSlots:
+	if body == Globals.player and (not disabled) and Globals.player.activeDashes.size() < Globals.dashSlots:
 		Globals.player.dashCrystal(self)
 		$AudioStreamPlayer3D.play()

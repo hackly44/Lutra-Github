@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://l0gjiusce2fx"]
+[gd_scene load_steps=24 format=3 uid="uid://l0gjiusce2fx"]
 
 [ext_resource type="Script" uid="uid://xe7q2lck5qh2" path="res://maps/scripts/startroom.gd" id="1_d1vj6"]
 [ext_resource type="PackedScene" uid="uid://dy5esg3jp8w41" path="res://level objects/player.tscn" id="2_a0tk4"]
@@ -76,6 +76,9 @@ size = Vector3(1, 9, 7)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_7n77x"]
 size = Vector3(11, 9, 8)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_gxt6l"]
+data = PackedVector3Array(-0.5, 4.5, 3.5, 0.5, 4.5, 3.5, -0.5, -4.5, 3.5, 0.5, 4.5, 3.5, 0.5, -4.5, 3.5, -0.5, -4.5, 3.5, 0.5, 4.5, -3.5, -0.5, 4.5, -3.5, 0.5, -4.5, -3.5, -0.5, 4.5, -3.5, -0.5, -4.5, -3.5, 0.5, -4.5, -3.5, 0.5, 4.5, 3.5, 0.5, 4.5, -3.5, 0.5, -4.5, 3.5, 0.5, 4.5, -3.5, 0.5, -4.5, -3.5, 0.5, -4.5, 3.5, -0.5, 4.5, -3.5, -0.5, 4.5, 3.5, -0.5, -4.5, -3.5, -0.5, 4.5, 3.5, -0.5, -4.5, 3.5, -0.5, -4.5, -3.5, 0.5, 4.5, 3.5, -0.5, 4.5, 3.5, 0.5, 4.5, -3.5, -0.5, 4.5, 3.5, -0.5, 4.5, -3.5, 0.5, 4.5, -3.5, -0.5, -4.5, 3.5, 0.5, -4.5, 3.5, -0.5, -4.5, -3.5, 0.5, -4.5, 3.5, 0.5, -4.5, -3.5, -0.5, -4.5, -3.5)
 
 [node name="Starting Room" type="Node3D"]
 script = ExtResource("1_d1vj6")
@@ -184,5 +187,13 @@ omni_range = 20.0
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
 shape = SubResource("BoxShape3D_7n77x")
+
+[node name="SafeGuard" type="StaticBody3D" parent="."]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 5, -4.5)
+collision_layer = 4
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SafeGuard"]
+shape = SubResource("ConcavePolygonShape3D_gxt6l")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
