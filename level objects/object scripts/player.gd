@@ -18,6 +18,12 @@ Message from SELF:
 |                                   - Regards, You |
 ----------------------------------------------------
 Message recived:  1/20/2026, 7:38 PM
+
+
+
+laptop yay!!!
+
+
 '''
 
 #region -- Consts
