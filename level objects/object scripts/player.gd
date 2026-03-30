@@ -3,7 +3,7 @@ extends CharacterBody3D
 '''
 Message from SELF:
 ----------------------------------------------------------------------------
-| Just make it work, they said. Mabie you should do that instead of making |
+| Just make it work, they said. Maybe you should do that instead of making |
 | asci art of messages to yourself "from the future" and lock in. I mean,  |
 | you havent even touched Lutra in a month, what are you doing? LOCK IN    |
 |                                                           - Regards, You |
@@ -36,7 +36,9 @@ const baseMouseSens = 0.005
 const gravityStrenth = 5
 const jumpForce = 18
 const wallJumpForce = 10
-const wallpushForce = 10
+const wallpushForce = 1.3
+const minWallForce = 7
+const wallJumpAngleMin = 20
 
 const wallFriction = 0.6
 const wallMin = -3
@@ -92,7 +94,6 @@ var realDirection = Vector3()
 var dashVelocity = Vector3()
 var dashing = false
 var befVelocity1 = 0
-var befVelocity2 = Vector3()
 var footInterval = 0.5
 var allowInput = true
 
@@ -152,9 +153,9 @@ func _physics_process(delta):
 #endregion
 
 #region -- Gravity
-	if not is_on_floor() and not is_on_wall_only():
+	if not is_on_floor() and not isOnWallOnly():
 		velocity.y += (get_gravity().y * gravityStrenth) * delta
-	elif is_on_wall_only():
+	elif isOnWallOnly():
 		velocity.y += (get_gravity().y * gravityStrenth * wallFriction) * delta
 #endregion
 
@@ -181,6 +182,7 @@ func _physics_process(delta):
 	$Ui/UiStamina.text = str(roundi((stamina / Globals.maxStamina) * 100), "%")
 	#$Ui/UiStamina.text = str(stamina) + '/' + str(Globals.maxStamina)
 	$Ui/UiLevel.text = str(Globals.level)
+	$Ui/UiSpeed.text = str(Vector3(velocity.x, 0, velocity.z).length()).pad_decimals(2)
 
 	$Ui/Upgrade/UpMoney.text = str(Globals.money)
 	$Ui/Upgrade/UpJump.text = '+1 Jump \n' + str(Globals.money) + '/' + str(Globals.jumpCost)
@@ -211,7 +213,7 @@ func _physics_process(delta):
 		Globals.intermission = false
 		allowInput = false
 
-	$Ui/UiDebug.text = str(Globals.score >= Globals.quota) + '\n' + str(Globals.score) + '/' + str(Globals.quota)
+	#$Ui/UiDebug.text = str(rad_to_deg())
 #endregion
 
 #region -- Shaders
@@ -225,27 +227,59 @@ func _physics_process(delta):
 #endregion
 
 #region -- Wall Jump
-	var trueWallPush = Vector3()
+	#var trueWallPush = Vector3()
 
-	if is_on_wall_only() and not crouched:
-		velocity.y = clamp(velocity.y, wallMin, befVelocity1 * wallFrac)
-		if trueDirection == Vector3(0.0, 0.0, 0.0):
-			trueWallPush = get_wall_normal()
-		else:
-			trueWallPush = trueDirection.bounce(get_wall_normal()).normalized()
-	else:
+	#if isOnWallOnly() and not crouched:
+		#velocity.y = clamp(velocity.y, wallMin, befVelocity1 * wallFrac)
+		#if trueDirection == Vector3(0.0, 0.0, 0.0):
+			#trueWallPush = getWallNormal()
+		#else:
+			#trueWallPush = trueDirection.bounce(getWallNormal()).normalized()
+			#$Ui/UiDebug.text = str(trueWallPush, '\n', trueDirection)
+	#else:
 		befVelocity1 = velocity.y
+		#$Ui/UiDebug.text = str(trueWallPush, '\n', trueDirection)
 
-	var tilt = sin(acos(forwardDirection.dot(get_wall_normal().rotated(Vector3(0,1,0),deg_to_rad(90)))) + (PI / 2))
-	if is_on_wall_only():
+	var tilt = sin(acos(forwardDirection.dot(getWallNormal().rotated(Vector3(0,1,0),deg_to_rad(90)))) + (PI / 2))
+	if isOnWallOnly():
 		camOffset.z = tilt * deg_to_rad(-camOffsetAmount)
 	else:
 		camOffset.z = 0
 
-	if is_on_wall_only() and Input.is_action_just_pressed("jump") and trueDirection.dot(get_wall_normal()) < 0:
-		if realSpeed < wallJumpForce:
-			pass
-		velocity = trueWallPush * wallpushForce
+	#if isOnWallOnly() and Input.is_action_just_pressed("jump") and trueDirection.dot(getWallNormal()) < 0:
+		#if realSpeed < wallJumpForce:
+			#pass
+		#if (Vector3(velocity.x, 0, velocity.z).length() * wallpushForce) < minWallForce:
+			#velocity = trueWallPush * minWallForce
+		#else:
+			#velocity = trueWallPush * Vector3(velocity.x, 0, velocity.z).length() * wallpushForce
+		#velocity.y = wallJumpForce * 5
+
+	var trueWallPush : float
+	var wallPushVector : Vector3
+
+	if isOnWall() and not crouched:
+		velocity.y = clamp(velocity.y, wallMin, befVelocity1 * wallFrac)
+		if trueDirection == Vector3(0.0, 0.0, 0.0):
+			trueWallPush = angleDiffrence(getWallNormal())
+		else:
+			trueWallPush = angleDiffrence(trueDirection.bounce(getWallNormal()).normalized(), getWallNormal())
+		trueWallPush = clampf(trueWallPush, deg_to_rad(-(90 - wallJumpAngleMin)), deg_to_rad(90 - wallJumpAngleMin))
+		wallPushVector = vectorAngle(trueWallPush).rotated(Vector3.UP, -angleDiffrence(getWallNormal())).bounce(getWallNormal())
+	else:
+		befVelocity1 = velocity.y
+
+
+	#$Ui/UiDebug.text = str(rad_to_deg(angleDiffrence(forwardD irection, getWallNormal())))
+	$Ui/UiDebug.text = str(wallPushVector, '\n', forwardDirection)
+
+	#$Ui/UiDebug.text = str(rad_to_deg(angleDiffrence(forwardDirection)))
+
+	if isOnWallOnly() and Input.is_action_just_pressed("jump"):
+		if (Vector3(velocity.x, 0, velocity.z).length() * wallpushForce) < minWallForce:
+			velocity = wallPushVector * minWallForce
+		else:
+			velocity = wallPushVector * Vector3(velocity.x, 0, velocity.z).length() * wallpushForce
 		velocity.y = wallJumpForce
 #endregion
 
@@ -343,7 +377,7 @@ func _physics_process(delta):
 	if is_on_floor():
 		$Cyotee.start(cyoteTime)
 
-	if Input.is_action_just_pressed("jump") and ($Cyotee.time_left > 0 or activeJumps.size() > 0) and not is_on_wall():
+	if Input.is_action_just_pressed("jump") and ($Cyotee.time_left > 0 or activeJumps.size() > 0) and not isOnWall():
 		if $Cyotee.time_left == 0:
 			activeJumps.remove_at(0)
 		velocity.y = jumpForce
@@ -352,6 +386,11 @@ func _physics_process(delta):
 
 #region -- Movement
 	forwardDirection = $ForwardMark.global_position - global_position
+
+	#if velocity.length() > 10:
+		#safe_margin = 0.85
+	#else:
+		#safe_margin = 0.001
 
 	realSpeed = velocity.length()
 	if realSpeed == 0:
@@ -399,6 +438,7 @@ func _physics_process(delta):
 		for i in velocityMult:
 			move_and_slide()
 #endregion
+
 
 func jumpCrystal(body) -> void:
 	activeJumps.append(body)
@@ -510,3 +550,30 @@ func _on_up_run_pressed() -> void:
 		Globals.money -= Globals.runCost
 		Globals.maxStamina += 25
 		Globals.runCost += 5
+
+@onready var wallSensor: ShapeCast3D = $WallSensor
+
+func isOnWall() -> bool:
+	if wallSensor.is_colliding():
+		return true
+	else:
+		return false
+
+func isOnWallOnly() -> bool:
+	if wallSensor.is_colliding() and not is_on_floor():
+		return true
+	else:
+		return false
+
+func getWallNormal() -> Vector3:
+	if wallSensor.is_colliding():
+		for i in wallSensor.get_collision_count():
+			var normal = wallSensor.get_collision_normal(i)
+			return normal
+	return Vector3.ZERO
+
+func angleDiffrence(v1 : Vector3, v2 : Vector3 = Vector3.FORWARD) -> float:
+	return v1.signed_angle_to(v2, Vector3.UP)
+
+func vectorAngle(angle : float) -> Vector3:
+	return Vector3(sin(angle), 0.0, cos(angle))

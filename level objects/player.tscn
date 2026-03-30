@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://dy5esg3jp8w41"]
+[gd_scene load_steps=17 format=3 uid="uid://dy5esg3jp8w41"]
 
 [ext_resource type="Script" uid="uid://b4sqgrbc5xt37" path="res://level objects/object scripts/player.gd" id="1_4flbx"]
 [ext_resource type="FontFile" uid="uid://bamnh4btmynt1" path="res://Tomorrow-Regular.ttf" id="2_cnrjc"]
@@ -6,6 +6,10 @@
 [ext_resource type="Texture2D" uid="uid://b8h1ynxwcxf8o" path="res://maxresdefault.jpg" id="4_gqe3r"]
 [ext_resource type="AudioStream" uid="uid://wapqbly1ta28" path="res://Audio/sfx/sypherpk.wav" id="5_lein8"]
 [ext_resource type="Material" uid="uid://wew0km0e3tmr" path="res://Shaders/glitch.tres" id="6_vtiqs"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_vtiqs"]
+radius = 0.85
+height = 3.5
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_onrkg"]
 height = 3.5
@@ -163,8 +167,12 @@ collision_mask = 2
 floor_stop_on_slope = false
 floor_max_angle = 1.39626
 floor_snap_length = 0.5
-safe_margin = 0.05
 script = ExtResource("1_4flbx")
+
+[node name="WallSensor" type="ShapeCast3D" parent="."]
+shape = SubResource("CapsuleShape3D_vtiqs")
+target_position = Vector3(0, 0, 0)
+collision_mask = 2
 
 [node name="CrouchFix" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
@@ -192,7 +200,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00321567, 1.04037, -0.00202
 current = true
 fov = 37.8493
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Camera"]
+[node name="Game Shader" type="MeshInstance3D" parent="Camera"]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, -1)
 mesh = SubResource("QuadMesh_lein8")
 
@@ -237,6 +245,18 @@ theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 18
 text = "null"
 
+[node name="UiSpeed" type="Label" parent="Ui"]
+offset_left = 582.0
+offset_top = 313.0
+offset_right = 693.0
+offset_bottom = 335.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2_cnrjc")
+theme_override_font_sizes/font_size = 18
+text = "null"
+vertical_alignment = 1
+
 [node name="UiJumps" type="Label" parent="Ui"]
 offset_left = 11.0
 offset_top = 29.0
@@ -265,8 +285,8 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 976.0
-offset_top = 585.971
+offset_left = 781.0
+offset_top = 526.971
 offset_right = 1152.0
 offset_bottom = 647.971
 grow_horizontal = 0
