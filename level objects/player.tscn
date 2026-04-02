@@ -393,6 +393,14 @@ offset_bottom = 458.0
 text = "1$"
 horizontal_alignment = 1
 
+[node name="WallRun" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+
+[node name="WalloffBuffer" type="Timer" parent="."]
+process_callback = 0
+one_shot = true
+
 [node name="Slide" type="Timer" parent="."]
 process_callback = 0
 one_shot = true
@@ -407,6 +415,7 @@ one_shot = true
 
 [node name="InputBuffer" type="Timer" parent="."]
 process_callback = 0
+one_shot = true
 
 [node name="DeathShader" type="ColorRect" parent="."]
 visible = false

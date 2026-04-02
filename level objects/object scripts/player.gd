@@ -35,14 +35,17 @@ const baseMouseSens = 0.005
 
 const gravityStrenth = 5
 const jumpForce = 18
+
 const wallJumpForce = 10
 const wallpushForce = 1.3
 const minWallForce = 7
 const wallJumpAngleMin = 20
-
 const wallFriction = 0.6
 const wallMin = -3
 const wallFrac = 0.7
+const wallRunTime = 0.4
+const wallRunSpeedReq = 9
+const walloffBuffer = 0.1
 
 const sprintSpeed = 12
 const walkSpeed = 7
@@ -96,6 +99,7 @@ var dashing = false
 var befVelocity1 = 0
 var footInterval = 0.5
 var allowInput = true
+var allowWallRun = false
 
 ## Settings
 var mouseSens = 0.0
@@ -136,10 +140,10 @@ func _unhandled_input(event):
 func _physics_process(delta):
 	$Camera.rotation = camRotation + camOffset
 
-	$Camera.fov = Globals.FOV
+	$Camera.fov = Globals.FOV  
 
-	#if position.y < -30:
-		#damage()
+	if position.y < -30:
+		damage()
 
 	if is_on_ceiling():
 		position.y += -0.001
@@ -227,39 +231,26 @@ func _physics_process(delta):
 #endregion
 
 #region -- Wall Jump
-	#var trueWallPush = Vector3()
-
-	#if isOnWallOnly() and not crouched:
-		#velocity.y = clamp(velocity.y, wallMin, befVelocity1 * wallFrac)
-		#if trueDirection == Vector3(0.0, 0.0, 0.0):
-			#trueWallPush = getWallNormal()
-		#else:
-			#trueWallPush = trueDirection.bounce(getWallNormal()).normalized()
-			#$Ui/UiDebug.text = str(trueWallPush, '\n', trueDirection)
-	#else:
-		befVelocity1 = velocity.y
-		#$Ui/UiDebug.text = str(trueWallPush, '\n', trueDirection)
-
+## Camera Shit
 	var tilt = sin(acos(forwardDirection.dot(getWallNormal().rotated(Vector3(0,1,0),deg_to_rad(90)))) + (PI / 2))
 	if isOnWallOnly():
 		camOffset.z = tilt * deg_to_rad(-camOffsetAmount)
 	else:
 		camOffset.z = 0
 
-	#if isOnWallOnly() and Input.is_action_just_pressed("jump") and trueDirection.dot(getWallNormal()) < 0:
-		#if realSpeed < wallJumpForce:
-			#pass
-		#if (Vector3(velocity.x, 0, velocity.z).length() * wallpushForce) < minWallForce:
-			#velocity = trueWallPush * minWallForce
-		#else:
-			#velocity = trueWallPush * Vector3(velocity.x, 0, velocity.z).length() * wallpushForce
-		#velocity.y = wallJumpForce * 5
-
 	var trueWallPush : float
 	var wallPushVector : Vector3
 
-	if isOnWall() and not crouched:
-		velocity.y = clamp(velocity.y, wallMin, befVelocity1 * wallFrac)
+	if isOnWall() and not crouched and $WalloffBuffer.time_left == 0:
+		if allowWallRun and realSpeed > wallRunSpeedReq:
+			$WallRun.start(wallRunTime)
+			allowWallRun = false
+		if $WallRun.time_left == 0:
+			velocity.y = clamp(velocity.y, wallMin, befVelocity1 * wallFrac)
+		else:
+			velocity.y = clamp(velocity.y, 0, befVelocity1 * wallFrac)
+			if realSpeed < wallRunSpeedReq:
+				$WallRun.stop()
 		if trueDirection == Vector3(0.0, 0.0, 0.0):
 			trueWallPush = angleDiffrence(getWallNormal())
 		else:
@@ -268,10 +259,11 @@ func _physics_process(delta):
 		wallPushVector = vectorAngle(trueWallPush).rotated(Vector3.UP, -angleDiffrence(getWallNormal())).bounce(getWallNormal())
 	else:
 		befVelocity1 = velocity.y
+		allowWallRun = true
 
 
 	#$Ui/UiDebug.text = str(rad_to_deg(angleDiffrence(forwardD irection, getWallNormal())))
-	$Ui/UiDebug.text = str(wallPushVector, '\n', forwardDirection)
+	$Ui/UiDebug.text = str($WalloffBuffer.time_left)
 
 	#$Ui/UiDebug.text = str(rad_to_deg(angleDiffrence(forwardDirection)))
 
@@ -281,6 +273,7 @@ func _physics_process(delta):
 		else:
 			velocity = wallPushVector * Vector3(velocity.x, 0, velocity.z).length() * wallpushForce
 		velocity.y = wallJumpForce
+		$WalloffBuffer.start(walloffBuffer)
 #endregion
 
 #region -- Dash
@@ -300,7 +293,7 @@ func _physics_process(delta):
 
 	if $Dash.time_left != 0:
 		velocity = dashVelocity
-#endregion
+#endregion 
 
 #region -- Speed/Acceleration Control
 	if (Input.is_action_pressed("sprint") and stamina > 0) and not crouched:
@@ -392,7 +385,7 @@ func _physics_process(delta):
 	#else:
 		#safe_margin = 0.001
 
-	realSpeed = velocity.length()
+	realSpeed = Vector3(velocity.x, 0, velocity.z).length()
 	if realSpeed == 0:
 		realDirection = Vector3(0, 0, 0)
 	else:
@@ -430,9 +423,6 @@ func _physics_process(delta):
 	trueDirection = trueDirection.normalized()
 
 	velocity = velocity.move_toward(trueDirection * speed, acceleration)
-
-	if is_on_ceiling():
-		velocity.y = -0.001
 
 	if $"Death Anim".time_left == 0:
 		for i in velocityMult:

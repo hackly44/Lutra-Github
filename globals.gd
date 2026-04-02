@@ -24,7 +24,7 @@ var jumpSlots = 1
 var FOV = 70
 var Snesitivity = 1
 
-const version = "Lutra v0.12.1 - \"Physics Rework 1\"\nhackly44 2026"
+const version = "Lutra v0.12.2\n\"Physics Rework 2\"\nhackly44 2026"
 
 var deathAnim = false
 
