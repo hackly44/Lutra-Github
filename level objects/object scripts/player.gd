@@ -43,7 +43,7 @@ const wallJumpAngleMin = 20
 const wallFriction = 0.6
 const wallMin = -3
 const wallFrac = 0.7
-const wallRunTime = 0.4
+const wallRunTime = 0.7
 const wallRunSpeedReq = 9
 const walloffBuffer = 0.1
 
@@ -57,7 +57,7 @@ const groundAcceleration = 1.5
 const airAcceleration = 0.2
 const crouchAcceleration = 1.5
 const slideAcceleration = 0.1
-
+const freezeAcceleration = 0
 const slideBuffer = 9
 const slideTime = 0.5
 const dashTime = 0.15
@@ -100,6 +100,7 @@ var befVelocity1 = 0
 var footInterval = 0.5
 var allowInput = true
 var allowWallRun = false
+var wallRunning = false
 
 ## Settings
 var mouseSens = 0.0
@@ -125,7 +126,6 @@ func _ready():
 	reload()
 	$Ui/Upgrade.hide()
 
-
 # can prob move to _physics_process
 func _unhandled_input(event):
 	if $"Death Anim".time_left == 0:
@@ -140,9 +140,9 @@ func _unhandled_input(event):
 func _physics_process(delta):
 	$Camera.rotation = camRotation + camOffset
 
-	$Camera.fov = Globals.FOV  
+	$Camera.fov = Globals.FOV
 
-	if position.y < -30:
+	if position.y < -200:
 		damage()
 
 	if is_on_ceiling():
@@ -217,7 +217,7 @@ func _physics_process(delta):
 		Globals.intermission = false
 		allowInput = false
 
-	#$Ui/UiDebug.text = str(rad_to_deg())
+	$Ui/UiDebug.text = str(sliding)
 #endregion
 
 #region -- Shaders
@@ -230,7 +230,7 @@ func _physics_process(delta):
 		velocity = velocity.bounce(get_floor_normal())
 #endregion
 
-#region -- Wall Jump
+#region -- Wall Jump/Run
 ## Camera Shit
 	var tilt = sin(acos(forwardDirection.dot(getWallNormal().rotated(Vector3(0,1,0),deg_to_rad(90)))) + (PI / 2))
 	if isOnWallOnly():
@@ -247,9 +247,11 @@ func _physics_process(delta):
 			allowWallRun = false
 		if $WallRun.time_left == 0:
 			velocity.y = clamp(velocity.y, wallMin, befVelocity1 * wallFrac)
+			wallRunning = false
 		else:
 			velocity.y = clamp(velocity.y, 0, befVelocity1 * wallFrac)
-			if realSpeed < wallRunSpeedReq:
+			wallRunning = true
+			if realSpeed < wallRunSpeedReq or trueDirection.dot(getWallNormal()) > 0:
 				$WallRun.stop()
 		if trueDirection == Vector3(0.0, 0.0, 0.0):
 			trueWallPush = angleDiffrence(getWallNormal())
@@ -260,12 +262,7 @@ func _physics_process(delta):
 	else:
 		befVelocity1 = velocity.y
 		allowWallRun = true
-
-
-	#$Ui/UiDebug.text = str(rad_to_deg(angleDiffrence(forwardD irection, getWallNormal())))
-	$Ui/UiDebug.text = str($WalloffBuffer.time_left)
-
-	#$Ui/UiDebug.text = str(rad_to_deg(angleDiffrence(forwardDirection)))
+		wallRunning = false
 
 	if isOnWallOnly() and Input.is_action_just_pressed("jump"):
 		if (Vector3(velocity.x, 0, velocity.z).length() * wallpushForce) < minWallForce:
@@ -293,7 +290,7 @@ func _physics_process(delta):
 
 	if $Dash.time_left != 0:
 		velocity = dashVelocity
-#endregion 
+#endregion
 
 #region -- Speed/Acceleration Control
 	if (Input.is_action_pressed("sprint") and stamina > 0) and not crouched:
@@ -322,9 +319,11 @@ func _physics_process(delta):
 		if crouched:
 			speed = trueSpeed + airSpeed + crouchAirSpeed
 		else:
-
 			speed = trueSpeed + airSpeed
 		acceleration = airAcceleration
+
+	if sliding or wallRunning:
+		acceleration = freezeAcceleration
 #endregion
 
 #region -- Crouch/Slide
@@ -358,6 +357,10 @@ func _physics_process(delta):
 		velocity = realDirection * (realSpeed * slideForce)
 		stamina += -slidingCost
 		$Slide.start(slideTime)
+
+	if not is_on_floor() or isOnWall():
+		sliding = false
+		$Slide.stop()
 
 	if not crouched:
 		canSlide2 = true
@@ -429,18 +432,14 @@ func _physics_process(delta):
 			move_and_slide()
 #endregion
 
-
 func jumpCrystal(body) -> void:
 	activeJumps.append(body)
-
 
 func dashCrystal(body) -> void:
 	activeDashes.append(body)
 
-
 func goalCrystal(body) -> void:
 	activeGoals.append(body)
-
 
 func damage(pos : Vector3 = Vector3(0,0,0), power : int = 0) -> void:
 	Globals.deathAnim = true
@@ -465,8 +464,7 @@ func damage(pos : Vector3 = Vector3(0,0,0), power : int = 0) -> void:
 		else:
 			$RigidBody3D.linear_velocity = velocity
 
-		$"Death Anim".start(0.5)
-
+		$"Death Anim".start(0.1)
 
 func _on_death_anim_timeout() -> void:
 	Globals.deathAnim = false
@@ -476,7 +474,6 @@ func _on_death_anim_timeout() -> void:
 		get_tree().change_scene_to_file("res://menu.tscn")
 	else:
 		reload()
-
 
 func reload() -> void:
 	$Camera.current = true
@@ -503,16 +500,13 @@ func reload() -> void:
 	for i in range(Globals.lives):
 		inst(lifeIcon, Vector2((i * 20), 0), $Ui/UiLives)
 
-
 func inst(node, pos, parent)  -> void:
 	var instance = node.instantiate()
 	instance.position = pos
 	parent.add_child(instance)
 
-
 func _on_continue_pressed() -> void:
 	Globals.continued = true
-
 
 func _on_up_jump_pressed() -> void:
 	if Globals.money >= Globals.jumpCost:
@@ -520,20 +514,17 @@ func _on_up_jump_pressed() -> void:
 		Globals.jumpSlots += 1
 		Globals.jumpCost += 2
 
-
 func _on_up_dash_pressed() -> void:
 	if Globals.money >= Globals.dashCost:
 		Globals.money -= Globals.dashCost
 		Globals.dashSlots += 1
 		Globals.dashCost += 2
 
-
 func _on_up_life_pressed() -> void:
 	if Globals.money >= Globals.lifeCost:
 		Globals.money -= Globals.lifeCost
 		Globals.startLives += 1
 		Globals.lifeCost += 5
-
 
 func _on_up_run_pressed() -> void:
 	if Globals.money >= Globals.runCost:

@@ -38,7 +38,6 @@ func _ready():
 	enemyPasses = Globals.f4(Globals.level)
 	itemPasses = Globals.f5(Globals.level)
 
-
 	randiRoom = randomSet(midRooms, roomChance)
 
 ## Generate Rooms
@@ -155,8 +154,8 @@ func _process(_delta: float) -> void:
 
 		get_tree().reload_current_scene()
 
-	#if Input.is_action_just_pressed("enter"):
-		#get_tree().reload_current_scene()
+	if Input.is_action_just_pressed("enter"):
+		get_tree().reload_current_scene()
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	if body == Globals.player:
