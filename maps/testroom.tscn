@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://cptj3rbe733av"]
+[gd_scene load_steps=21 format=3 uid="uid://1rpf74s78lk4"]
 
 [ext_resource type="PackedScene" uid="uid://dy5esg3jp8w41" path="res://level objects/player.tscn" id="2_xetuw"]
 
@@ -156,11 +156,11 @@ transform = Transform3D(0.70710677, 0, -0.70710677, 0, 1, 0, 0.70710677, 0, 0.70
 shape = SubResource("ConcavePolygonShape3D_ktnj5")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="Meshes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.75, 0, -37.5)
+transform = Transform3D(5.94, 0, 0, 0, 1, 0, 0, 0, 2.7299998, 52.75, 0, -80.5)
 mesh = SubResource("BoxMesh_xetuw")
 
 [node name="CollisionShape3D12" type="CollisionShape3D" parent="Meshes"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.75, 0, -37.5)
+transform = Transform3D(5.94, 0, 0, 0, 1, 0, 0, 0, 2.7299998, 52.75, 0, -80.5)
 shape = SubResource("ConcavePolygonShape3D_db5gh")
 
 [node name="MeshInstance3D8" type="MeshInstance3D" parent="Meshes"]

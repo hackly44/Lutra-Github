@@ -17,14 +17,14 @@ var quota = 3
 
 var money = 0
 
-var maxStamina = INF
+var maxStamina = 100
 var dashSlots = 1
 var jumpSlots = 1
 
 var FOV = 70
 var Snesitivity = 1
 
-const version = "Lutra v0.12.3\n\"Physics Rework 3: Acceleration\"\nhackly44 2026"
+const version = "Lutra v0.12.4\n\"Physics Rework 4: Air Acceleration\"\nhackly44 2026"
 
 var deathAnim = false
 

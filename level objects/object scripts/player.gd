@@ -55,9 +55,10 @@ const crouchAirSpeed = 7
 
 const groundAcceleration = 1.5
 const airAcceleration = 0.2
+const airCrouchAcceleration = 0.0
 const crouchAcceleration = 1.5
 const slideAcceleration = 0.1
-const freezeAcceleration = 0
+const freezeAcceleration = 0.0
 const slideBuffer = 9
 const slideTime = 0.5
 const dashTime = 0.15
@@ -217,7 +218,7 @@ func _physics_process(delta):
 		Globals.intermission = false
 		allowInput = false
 
-	$Ui/UiDebug.text = str(sliding)
+	$Ui/UiDebug.text = str(acceleration, '\n', speed)
 #endregion
 
 #region -- Shaders
@@ -318,9 +319,10 @@ func _physics_process(delta):
 	else:
 		if crouched:
 			speed = trueSpeed + airSpeed + crouchAirSpeed
+			acceleration = airCrouchAcceleration
 		else:
 			speed = trueSpeed + airSpeed
-		acceleration = airAcceleration
+			acceleration = airAcceleration
 
 	if sliding or wallRunning:
 		acceleration = freezeAcceleration
