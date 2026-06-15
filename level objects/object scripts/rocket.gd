@@ -2,10 +2,9 @@ extends Area3D
 
 var playing = true
 var tracking = true
-var lookSpeed = 3
+const lookSpeed = 3
 const speed = 20
 const vector = Vector3(0, 0, -1)
-const lookSpeedIncrease = 1
 
 func _process(delta: float) -> void:
 	$ForwardDir.look_at(Globals.player.global_position)
@@ -13,8 +12,6 @@ func _process(delta: float) -> void:
 	if tracking and playing:
 		$AudioStreamPlayer3D2.play()
 		playing = false
-
-	lookSpeed += lookSpeedIncrease * delta
 
 	$RealForwardDir.rotation.x = rotate_toward($RealForwardDir.rotation.x, $ForwardDir.rotation.x, lookSpeed * delta)
 	$RealForwardDir.rotation.y = rotate_toward($RealForwardDir.rotation.y, $ForwardDir.rotation.y, lookSpeed * delta)
