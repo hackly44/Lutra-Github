@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://dy5esg3jp8w41"]
+[gd_scene format=3 uid="uid://dy5esg3jp8w41"]
 
 [ext_resource type="Script" uid="uid://b4sqgrbc5xt37" path="res://level objects/object scripts/player.gd" id="1_4flbx"]
 [ext_resource type="FontFile" uid="uid://bamnh4btmynt1" path="res://Tomorrow-Regular.ttf" id="2_cnrjc"]
@@ -162,55 +162,59 @@ size = Vector2(2, 2)
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_lein8"]
 bounce = 0.45
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" unique_id=1038097268]
 collision_mask = 2
 floor_max_angle = 1.0471976
 script = ExtResource("1_4flbx")
 
-[node name="WallSensor" type="ShapeCast3D" parent="."]
+[node name="WallSensor" type="ShapeCast3D" parent="." unique_id=1897330981]
 shape = SubResource("CapsuleShape3D_vtiqs")
 target_position = Vector3(0, 0, 0)
 collision_mask = 2
 
-[node name="CrouchFix" type="Area3D" parent="."]
+[node name="CrouchFix" type="Area3D" parent="." unique_id=1047914316]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
 collision_layer = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CrouchFix"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CrouchFix" unique_id=1154213768]
 shape = SubResource("CapsuleShape3D_onrkg")
 
-[node name="Standing" type="CollisionShape3D" parent="."]
+[node name="Standing" type="CollisionShape3D" parent="." unique_id=508576985]
 shape = SubResource("CapsuleShape3D_sh265")
 
-[node name="Standing" type="MeshInstance3D" parent="Standing"]
+[node name="Standing" type="MeshInstance3D" parent="Standing" unique_id=1622882755]
 mesh = SubResource("CapsuleMesh_4flbx")
 skeleton = NodePath("../..")
 
-[node name="Crounched" type="CollisionShape3D" parent="."]
+[node name="Crounched" type="CollisionShape3D" parent="." unique_id=2008785287]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 shape = SubResource("CapsuleShape3D_4flbx")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Crounched"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Crounched" unique_id=1904050841]
 mesh = SubResource("CapsuleMesh_onrkg")
 
-[node name="Camera" type="Camera3D" parent="."]
+[node name="Camera" type="Camera3D" parent="." unique_id=326324430]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00321567, 1.04037, -0.00202847)
 current = true
 fov = 37.8493
 
-[node name="Game Shader" type="MeshInstance3D" parent="Camera"]
+[node name="Game Shader" type="MeshInstance3D" parent="Camera" unique_id=1364349964]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0, -1)
 mesh = SubResource("QuadMesh_lein8")
 
-[node name="ForwardMark" type="Marker3D" parent="."]
+[node name="SpotLight3D" type="SpotLight3D" parent="Camera" unique_id=1347479797]
+spot_range = 59.0
+spot_attenuation = 0.0
+
+[node name="ForwardMark" type="Marker3D" parent="." unique_id=960858540]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 
-[node name="LeftwardMark" type="Marker3D" parent="."]
+[node name="LeftwardMark" type="Marker3D" parent="." unique_id=1231274030]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, 0)
 
-[node name="Ui" type="Node2D" parent="."]
+[node name="Ui" type="Node2D" parent="." unique_id=1721063080]
 
-[node name="UiDashes" type="Label" parent="Ui"]
+[node name="UiDashes" type="Label" parent="Ui" unique_id=1560921097]
 offset_left = 11.0
 offset_top = 5.0
 offset_right = 122.0
@@ -221,7 +225,7 @@ theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 25
 text = "null"
 
-[node name="UiScore" type="Label" parent="Ui"]
+[node name="UiScore" type="Label" parent="Ui" unique_id=668990557]
 offset_left = 11.0
 offset_top = 593.0
 offset_right = 122.0
@@ -232,7 +236,7 @@ theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 25
 text = "null"
 
-[node name="UiLevel" type="Label" parent="Ui"]
+[node name="UiLevel" type="Label" parent="Ui" unique_id=343538241]
 offset_left = 12.0
 offset_top = 577.0
 offset_right = 123.0
@@ -243,7 +247,7 @@ theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 18
 text = "null"
 
-[node name="UiSpeed" type="Label" parent="Ui"]
+[node name="UiSpeed" type="Label" parent="Ui" unique_id=3530482]
 offset_left = 582.0
 offset_top = 313.0
 offset_right = 693.0
@@ -255,7 +259,7 @@ theme_override_font_sizes/font_size = 18
 text = "null"
 vertical_alignment = 1
 
-[node name="UiJumps" type="Label" parent="Ui"]
+[node name="UiJumps" type="Label" parent="Ui" unique_id=1470518900]
 offset_left = 11.0
 offset_top = 29.0
 offset_right = 151.0
@@ -266,7 +270,7 @@ theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 25
 text = "null"
 
-[node name="UiStamina" type="Label" parent="Ui"]
+[node name="UiStamina" type="Label" parent="Ui" unique_id=1119327531]
 offset_left = 11.0
 offset_top = 53.0
 offset_right = 151.0
@@ -277,7 +281,7 @@ theme_override_fonts/font = ExtResource("2_cnrjc")
 theme_override_font_sizes/font_size = 25
 text = "null"
 
-[node name="Verson Lable" type="Label" parent="Ui"]
+[node name="Verson Lable" type="Label" parent="Ui" unique_id=759945861]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -294,7 +298,7 @@ text = "--Version--"
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="UiDebug" type="Label" parent="Ui"]
+[node name="UiDebug" type="Label" parent="Ui" unique_id=2005059520]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -311,46 +315,46 @@ text = "Debug Info"
 horizontal_alignment = 1
 vertical_alignment = 2
 
-[node name="Center" type="Polygon2D" parent="Ui"]
+[node name="Center" type="Polygon2D" parent="Ui" unique_id=364655844]
 polygon = PackedVector2Array(573, 324, 574, 326, 576, 327, 578, 326, 579, 324, 578, 322, 576, 321, 574, 322)
 
-[node name="Forward" type="Polygon2D" parent="Ui/Center"]
+[node name="Forward" type="Polygon2D" parent="Ui/Center" unique_id=136552383]
 visible = false
 polygon = PackedVector2Array(574, 320, 576, 319, 578, 320, 578, 321, 576, 320, 574, 321)
 
-[node name="Backward" type="Polygon2D" parent="Ui/Center"]
+[node name="Backward" type="Polygon2D" parent="Ui/Center" unique_id=969969551]
 visible = false
 polygon = PackedVector2Array(574, 327, 576, 328, 578, 327, 578, 328, 576, 329, 574, 328)
 
-[node name="Left" type="Polygon2D" parent="Ui/Center"]
+[node name="Left" type="Polygon2D" parent="Ui/Center" unique_id=1607157992]
 visible = false
 polygon = PackedVector2Array(573, 322, 572, 324, 573, 326, 572, 326, 571, 324, 572, 322)
 
-[node name="Right" type="Polygon2D" parent="Ui/Center"]
+[node name="Right" type="Polygon2D" parent="Ui/Center" unique_id=145855526]
 visible = false
 polygon = PackedVector2Array(579, 322, 580, 324, 579, 326, 580, 326, 581, 324, 580, 322)
 
-[node name="Cross" type="Polygon2D" parent="Ui/Center"]
+[node name="Cross" type="Polygon2D" parent="Ui/Center" unique_id=403260017]
 visible = false
 polygon = PackedVector2Array(574, 324, 576, 326, 578, 324, 576, 322)
 
-[node name="Direction" type="Polygon2D" parent="Ui/Center"]
+[node name="Direction" type="Polygon2D" parent="Ui/Center" unique_id=818323281]
 position = Vector2(576, 324)
 polygon = PackedVector2Array(5, 0, 3, -4, 4, -4, 6, 0, 4, 4, 3, 4)
 
-[node name="UiLives" type="Node2D" parent="Ui"]
+[node name="UiLives" type="Node2D" parent="Ui" unique_id=1441915559]
 position = Vector2(12, 623)
 
-[node name="Upgrade" type="Node2D" parent="Ui"]
+[node name="Upgrade" type="Node2D" parent="Ui" unique_id=1243211700]
 
-[node name="Continue" type="Button" parent="Ui/Upgrade"]
+[node name="Continue" type="Button" parent="Ui/Upgrade" unique_id=1867789712]
 offset_left = 523.0
 offset_top = 392.0
 offset_right = 629.0
 offset_bottom = 424.0
 text = "Continue"
 
-[node name="UpJump" type="Button" parent="Ui/Upgrade"]
+[node name="UpJump" type="Button" parent="Ui/Upgrade" unique_id=1831484424]
 offset_left = 540.0
 offset_top = 332.0
 offset_right = 612.0
@@ -358,7 +362,7 @@ offset_bottom = 388.0
 text = "+1 jump
 1/1"
 
-[node name="UpLife" type="Button" parent="Ui/Upgrade"]
+[node name="UpLife" type="Button" parent="Ui/Upgrade" unique_id=1528761604]
 offset_left = 616.0
 offset_top = 332.0
 offset_right = 688.0
@@ -366,7 +370,7 @@ offset_bottom = 388.0
 text = "+1 Life
 1/1"
 
-[node name="UpRun" type="Button" parent="Ui/Upgrade"]
+[node name="UpRun" type="Button" parent="Ui/Upgrade" unique_id=1847714303]
 offset_left = 524.0
 offset_top = 260.0
 offset_right = 628.0
@@ -374,7 +378,7 @@ offset_bottom = 316.0
 text = "+50 Stamina
 1/1"
 
-[node name="UpDash" type="Button" parent="Ui/Upgrade"]
+[node name="UpDash" type="Button" parent="Ui/Upgrade" unique_id=659192096]
 offset_left = 464.0
 offset_top = 332.0
 offset_right = 536.0
@@ -382,7 +386,7 @@ offset_bottom = 388.0
 text = "+1 dash
 1/1"
 
-[node name="UpMoney" type="Label" parent="Ui/Upgrade"]
+[node name="UpMoney" type="Label" parent="Ui/Upgrade" unique_id=1340715447]
 visible = false
 offset_left = 566.0
 offset_top = 435.0
@@ -391,31 +395,31 @@ offset_bottom = 458.0
 text = "1$"
 horizontal_alignment = 1
 
-[node name="WallRun" type="Timer" parent="."]
+[node name="WallRun" type="Timer" parent="." unique_id=577629127]
 process_callback = 0
 one_shot = true
 
-[node name="WalloffBuffer" type="Timer" parent="."]
+[node name="WalloffBuffer" type="Timer" parent="." unique_id=1903192681]
 process_callback = 0
 one_shot = true
 
-[node name="Slide" type="Timer" parent="."]
+[node name="Slide" type="Timer" parent="." unique_id=1590874215]
 process_callback = 0
 one_shot = true
 
-[node name="Dash" type="Timer" parent="."]
+[node name="Dash" type="Timer" parent="." unique_id=1046244242]
 process_callback = 0
 one_shot = true
 
-[node name="Cyotee" type="Timer" parent="."]
+[node name="Cyotee" type="Timer" parent="." unique_id=1473059501]
 process_callback = 0
 one_shot = true
 
-[node name="InputBuffer" type="Timer" parent="."]
+[node name="InputBuffer" type="Timer" parent="." unique_id=1395317416]
 process_callback = 0
 one_shot = true
 
-[node name="DeathShader" type="ColorRect" parent="."]
+[node name="DeathShader" type="ColorRect" parent="." unique_id=1782754613]
 visible = false
 material = ExtResource("6_vtiqs")
 offset_right = 1152.0
@@ -423,29 +427,29 @@ offset_bottom = 648.0
 mouse_filter = 2
 metadata/_edit_lock_ = true
 
-[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=1081352439]
 stream = ExtResource("3_cnrjc")
 max_polyphony = 5
 bus = &"Sfx"
 
-[node name="FootstepInterval" type="Timer" parent="AudioStreamPlayer3D"]
+[node name="FootstepInterval" type="Timer" parent="AudioStreamPlayer3D" unique_id=1309445083]
 process_callback = 0
 one_shot = true
 
-[node name="Maxresdefault" type="Sprite2D" parent="."]
+[node name="Maxresdefault" type="Sprite2D" parent="." unique_id=515380862]
 self_modulate = Color(1, 1, 1, 0)
 position = Vector2(576, 323.996)
 scale = Vector2(0.9, 0.89999)
 texture = ExtResource("4_gqe3r")
 metadata/_edit_lock_ = true
 
-[node name="Timer" type="Timer" parent="Maxresdefault"]
+[node name="Timer" type="Timer" parent="Maxresdefault" unique_id=1827961671]
 one_shot = true
 
-[node name="Sypherpk" type="AudioStreamPlayer" parent="Maxresdefault"]
+[node name="Sypherpk" type="AudioStreamPlayer" parent="Maxresdefault" unique_id=479309777]
 stream = ExtResource("5_lein8")
 
-[node name="RigidBody3D" type="RigidBody3D" parent="."]
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=2120867303]
 visible = false
 collision_layer = 0
 collision_mask = 2
@@ -455,30 +459,30 @@ physics_material_override = SubResource("PhysicsMaterial_lein8")
 freeze = true
 freeze_mode = 1
 
-[node name="Standing" type="MeshInstance3D" parent="RigidBody3D"]
+[node name="Standing" type="MeshInstance3D" parent="RigidBody3D" unique_id=1597956042]
 mesh = SubResource("CapsuleMesh_4flbx")
 skeleton = NodePath("../..")
 
-[node name="Camera3D" type="Camera3D" parent="RigidBody3D"]
+[node name="Camera3D" type="Camera3D" parent="RigidBody3D" unique_id=1743319678]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="RigidBody3D/Camera3D"]
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="RigidBody3D/Camera3D" unique_id=2001105929]
 transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0.00321567, 0.040369987, -1.0020285)
 mesh = SubResource("QuadMesh_lein8")
 skeleton = NodePath("../../../Camera")
 
-[node name="Standing2" type="CollisionShape3D" parent="RigidBody3D"]
+[node name="Standing2" type="CollisionShape3D" parent="RigidBody3D" unique_id=2129925419]
 shape = SubResource("CapsuleShape3D_sh265")
 
-[node name="Death Anim" type="Timer" parent="."]
+[node name="Death Anim" type="Timer" parent="." unique_id=350186673]
 process_callback = 0
 one_shot = true
 ignore_time_scale = true
 
-[node name="Death Anim Dir" type="Marker3D" parent="Death Anim"]
+[node name="Death Anim Dir" type="Marker3D" parent="Death Anim" unique_id=1019317154]
 transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
-[node name="Negative Anim Dir" type="Marker3D" parent="Death Anim/Death Anim Dir"]
+[node name="Negative Anim Dir" type="Marker3D" parent="Death Anim/Death Anim Dir" unique_id=1145288399]
 transform = Transform3D(1, 0, 0, -2.9802322e-08, 1, 2.9802322e-08, 0, 0, 1, 0, 0, -1)
 
 [connection signal="pressed" from="Ui/Upgrade/Continue" to="." method="_on_continue_pressed"]

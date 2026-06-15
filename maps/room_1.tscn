@@ -2,21 +2,8 @@
 
 [ext_resource type="ArrayOccluder3D" uid="uid://bjfa40qu1a80s" path="res://maps/occCulling/room_1.occ" id="1_sjqpu"]
 
-[sub_resource type="ArrayMesh" id="ArrayMesh_5fihj"]
-_surfaces = [{
-"aabb": AABB(-19.5, -0.5, -22.5, 39, 14, 45),
-"attribute_data": PackedByteArray("7yFLPwAAAAAAAIA/xf9CPwAAgD/pAHQ+7yFLPwAAAABEeFM+AAAAAAAAgD/F/0I/xv9CPwAAAADsAHQ+AAAAAMb/Qj8AAIA/AACAP+8hSz8AAIA/RHhTPgAAAADvIUs/RHhTPgAAAAAAAAAA6QB0Pu8hSz8AAIA/AAAAAER4Uz4AAAAA7yFLPwAAgD9EeFM+AACAP8b/Qj9FeFM+AAAAAO8hSz8AAIA/xv9CPwAAAADrAHQ+AAAAAMb/Qj8AAIA/7yFLPwAAgD8AAAAA6wB0PkR4Uz4AAIA/RHhTPgAAgD8AAAAA6wB0PgAAAADG/0I/RHhTPgAAAADvIUs/AACAPwAAgD/F/0I/AACAP+8hSz8AAIA/RXhTPgAAAADvIUs/7yFLPwAAgD8AAAAA6QB0PkV4Uz4AAIA/RXhTPgAAgD8AAAAA6QB0PgAAAADF/0I/xv9CPwAAgD/rAHQ+AAAAAOsAdD4AAIA/xv9CPwAAgD/sAHQ+AAAAAOwAdD4AAIA/AACAP8b/Qj8AAIA/7AB0PkV4Uz4AAAAAAACAP+wAdD7vIUs/AAAAAEV4Uz4AAAAA7yFLPwAAgD9FeFM+AAAAAAAAAADrAHQ+AAAAAEV4Uz4AAAAA7yFLPwAAgD9FeFM+AACAP1MkWT8AAAAAUyRZPwAAgD//nNs8AAAAAP+c2zwAAIA//5zbPAAAAABTJFk/AACAP6xuGz4AAIA/FSN5PwAAAAAVI3k/AAAAAKxuGz4AAIA/rG4bPgAAAAAVI3k/AACAP1UkWT8AAAAAVSRZPwAAgD9Znds8AAAAAFUkWT8AAAAAWZ3bPAAAgD9Znds8AACAP6xuGz4AAIA/GCN5PwAAAAAYI3k/AAAAAKxuGz4AAIA/rG4bPgAAAAAYI3k/"),
-"format": 34359738391,
-"primitive": 3,
-"uv_scale": Vector4(0, 0, 0, 0),
-"vertex_count": 84,
-"vertex_data": PackedByteArray("AACcwQAAAL9wT1PBcE8jQQAAAL8AALTBck8jwQAAAL8AALTBAACcwQAAAL9wT1PBAACcwQAAAL9wT1NBcE8jQQAAAL8AALTBck8jwQAAAL8AALTBcE8jQQAAAL8AALTBck8jwQAAWEEAALTBAACcwQAAAL9wT1NBAACcwQAAAL9wT1PBAACcwQAAWEFwT1NBAACcwQAAAL9wT1NBck8jwQAAAL8AALRBAACcQQAAAL9wT1PBAACcwQAAWEFwT1PBAACcwQAAWEFwT1NBAACcwQAAAL9wT1PBck8jwQAAWEEAALTBAACcQQAAWEFvT1NBAACcwQAAWEFwT1PBck8jwQAAWEEAALRBcU8jQQAAWEEAALRBck8jwQAAAL8AALRBAACcwQAAWEFwT1PBcU8jQQAAWEEAALRBAACcwQAAWEFwT1NBAACcwQAAWEFwT1NBcU8jQQAAWEEAALRBck8jwQAAWEEAALRBAACcwQAAAL9wT1NBAACcQQAAAL9wT1PBcE8jQQAAAL8AALTBAACcQQAAAL9wT1PBAACcQQAAAL9vT1NBAACcQQAAWEFwT1PBAACcQQAAAL9wT1PBck8jwQAAAL8AALRBAACcQQAAAL9vT1NBAACcQQAAAL9vT1NBck8jwQAAAL8AALRBcU8jQQAAAL8AALRBck8jwQAAAL8AALRBcU8jQQAAWEEAALRBcU8jQQAAAL8AALRBck8jwQAAWEEAALTBcE8jQQAAAL8AALTBcE8jQQAAWEEAALTBck8jwQAAWEEAALTBcE8jQQAAWEEAALTBAACcQQAAWEFvT1NBcE8jQQAAWEEAALTBAACcQQAAWEFwT1PBAACcQQAAWEFvT1NBAACcwQAAWEFwT1PBAACcQQAAWEFvT1NBcU8jQQAAWEEAALRBAACcQQAAWEFvT1NBAACcQQAAWEFwT1PBAACcQQAAAL9vT1NBAACcQQAAAL9wT1PBAACcQQAAWEFwT1PBcE8jQQAAAL8AALTBcE8jQQAAWEEAALTBcE8jQQAAAL8AALTBAACcQQAAWEFwT1PBAACcwQAAAL9wT1PBck8jwQAAAL8AALTBck8jwQAAWEEAALTBAACcwQAAWEFwT1PBAACcwQAAAL9wT1PBck8jwQAAWEEAALTBAACcwQAAAL9wT1NBAACcwQAAWEFwT1NBck8jwQAAAL8AALRBAACcwQAAWEFwT1NBck8jwQAAWEEAALRBck8jwQAAAL8AALRBAACcQQAAAL9vT1NBcU8jQQAAAL8AALRBcU8jQQAAWEEAALRBAACcQQAAWEFvT1NBAACcQQAAAL9vT1NBcU8jQQAAWEEAALRB/38AAP//AAD/fwAA//8AAP9/AAD//wAA/38AAP//AAD/fwAA//8AAP9/AAD//wAA/////wAA/z//////AAD/P/////8AAP8/AAD/f/9//n8AAP9//3/+fwAA/3//f/5//38AAP//AAD/fwAAAAAAAP9/AAD//wAAAAD/f/9//n8AAP9//3/+fwAA/3//f/5//3//////AAD/f/////8AAP9//////wAA/3//fwAA/z//f/9/AAD/P/9//38AAP8//3//////AAD/f///AAAAAP9///8AAAAA/3///wAAAAD/f///AAAAAP9///8AAAAA/38AAP//AAD/fwAA//8AAP9/AAD//wAA////f/9//n////9//3/+f////3//f/5//38AAP//AAD/fwAAAAAAAP9/AAAAAAAA/38AAAAAAAD/fwAAAAAAAP9/AAAAAAAA/3//fwAA/z//f/9/AAD/P/9//38AAP8//////wAA/z//////AAD/P/////8AAP8//3//////AAD/f/////8AAP9//////wAA/3//////AAD/f/////8AAP9//////wAA/3//////AAD/f/////8AAP9///8AAAAA////f/9//n////9//3/+f////3//f/5/////v/9/AID///+//38AgP///7//fwCA////v/9/AID///+//38AgP///7//fwCAAAD/v/9/AIAAAP+//38AgAAA/7//fwCAAAD/v/9/AIAAAP+//38AgAAA/7//fwCA/z//f/9/AID/P/9//38AgP8//3//fwCA/z//f/9/AID/P/9//38AgP8//3//fwCA/7//f/9/AID/v/9//38AgP+//3//fwCA/7//f/9/AID/v/9//38AgP+//3//fwCA")
-}]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dogv4"]
-transparency = 1
-albedo_color = Color(1, 0, 0, 0.207843)
-disable_receive_shadows = true
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_sjqpu"]
+points = PackedVector3Array(19.5, 13.5, 13.205753, 10.204287, 13.5, 22.5, 19.5, -0.5, 13.205753, 19.5, 13.5, -13.210161, 10.204287, -0.5, 22.5, -10.208105, 13.5, 22.5, 19.5, -0.5, -13.210161, 10.204287, 13.5, -22.5, -10.208105, -0.5, 22.5, -19.5, 13.5, 13.205753, 10.204287, -0.5, -22.5, -10.208105, 13.5, -22.5, -19.5, -0.5, 13.205753, -19.5, 13.5, -13.210161, -10.208105, -0.5, -22.5, -19.5, -0.5, -13.210161)
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_sjqpu"]
 _surfaces = [{
@@ -51,11 +38,13 @@ metadata/free = true
 transform = Transform3D(0.7071067, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, 0.7071067, -14.853554, 0, -40.353554)
 metadata/free = true
 
-[node name="AABB" type="MeshInstance3D" parent="." unique_id=432142695]
+[node name="AABB" type="Area3D" parent="." unique_id=1000593736]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -22.5)
-visible = false
-mesh = SubResource("ArrayMesh_5fihj")
-surface_material_override/0 = SubResource("StandardMaterial3D_dogv4")
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AABB" unique_id=407196148]
+shape = SubResource("ConvexPolygonShape3D_sjqpu")
 
 [node name="Enemy Spawns" type="Node3D" parent="." unique_id=1749765201]
 visible = false
@@ -233,22 +222,22 @@ transform = Transform3D(-0.7071068, 0, 0.7071067, 0, 1, 0, -0.7071067, 0, -0.707
 operation = 2
 size = Vector3(11, 14, 16)
 
-[node name="CSGBox3D15" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=2078219162]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 6.5, 0)
-operation = 2
-size = Vector3(1, 12, 27)
-
 [node name="CSGBox3D16" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=551331375]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 6.5, 0)
 operation = 2
-size = Vector3(1, 12, 27)
+size = Vector3(1, 14, 27)
 
-[node name="CSGBox3D17" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=1014776351]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, -23)
+[node name="CSGBox3D17" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=51932613]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 6.5, 0)
 operation = 2
-size = Vector3(21, 12, 1)
+size = Vector3(1, 14, 27)
 
 [node name="CSGBox3D18" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=1935101979]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 23)
 operation = 2
-size = Vector3(21, 12, 1)
+size = Vector3(22, 14, 1)
+
+[node name="CSGBox3D19" type="CSGBox3D" parent="CSGCombiner3D2" unique_id=327466330]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, -23)
+operation = 2
+size = Vector3(22, 14, 1)

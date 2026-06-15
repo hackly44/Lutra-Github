@@ -38,74 +38,11 @@ func _ready():
 	#enemyPasses = Globals.f4(Globals.level)
 	#itemPasses = Globals.f5(Globals.level)
 
+	Globals.quota = 0
 	randiRoom = randomSet(midRooms, roomChance)
 
 ## Generate Rooms
-	while not (generationPasses <= 0 or findOpen().size() == 0 or err > errBuffer):
-		var gen = 0
-		for j in range(generationPasses):
-			var room = randiRoom.pick_random()
-			if findOpen().size() == 0:
-				break
-			var root = findOpen().pick_random()
-			instRoom(room, root.global_position, root.global_rotation)
-			await get_tree().physics_frame
-			genErr = false
-			for i in rooms:
-				var roomAABB = rooms[-1].get_child(1)
-				var checkAABB = i.get_child(1)
-				var rootAABB = root.get_parent().get_parent().get_child(1)
-				if check_intersection(roomAABB, checkAABB) and roomAABB != checkAABB and roomAABB != rootAABB:
-					rooms[-1].queue_free()
-					rooms.resize(rooms.size() - 1)
-					genErr = true
-					break
-			if not genErr:
-				root.set_meta("free", false)
-				generationPasses += -1
-				gen += 1
-		if gen == 0:
-			err += 1
-	for i in findOpen():
-		inst(endRoom, i.global_position, i.global_rotation)
-
-## Generate Enemies
-	for i in rooms:
-		if i.get_child(2).get_child_count() != 0:
-			for j in i.get_child(2).get_children():
-				enemySpawns.append(j)
-	for i in range(enemyPasses):
-		var root = enemySpawns.pick_random()
-		var enemy = enemys.pick_random()
-		inst(enemy, root.global_position, Vector3(0, 0, 0))
-		enemySpawns.erase(root)
-
-## Find all open item / goal spawns
-	for i in rooms:
-		if i.get_child(3).get_child_count() != 0:
-			for j in i.get_child(3).get_children():
-				itemSpawns.append(j)
-
-## Generate Goals
-	for i in range(randi_range(Globals.quota, maxGoalPasses)):
-		#print(i)
-		var root = itemSpawns.pick_random()
-		inst(goal, root.global_position, root.global_rotation)
-		itemSpawns.erase(root)
-		if itemSpawns.size() == 0:
-			break
-
-## Generate Items
-	var passes = 0
-	if itemPasses < itemSpawns.size():
-		passes = itemPasses
-	else:
-		passes = itemSpawns.size()
-	for i in range(passes):
-		var root = itemSpawns.pick_random()
-		var item = items.pick_random()
-		inst(item, root.global_position, root.global_rotation)
-		itemSpawns.erase(root)
+	generate.call_deferred()
 
 ## Instancer for rooms
 func instRoom(node, pos, rot):
@@ -164,24 +101,102 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
 				Globals.intermission = true
 
 ## --- AI WAS USED FOR THIS FUNCTION!!! ---
-func check_intersection(mesh_a : MeshInstance3D, mesh_b : MeshInstance3D) -> bool:
-	# 1. Create temporary shape resources
-	var shape_a := ConvexPolygonShape3D.new()
-	var shape_b := ConvexPolygonShape3D.new()
+func is_area_overlapping_instant(area: Area3D) -> bool:
+	var space_state = get_world_3d().direct_space_state
 	
-	# 2. Populate them with your mesh vertex data
-	shape_a.points = mesh_a.mesh.get_faces()
-	shape_b.points = mesh_b.mesh.get_faces()
+	# Get the collision shape from the Area3D
+	var shape_owner = area.get_shape_owners()[0]
+	var shape = area.shape_owner_get_shape(shape_owner, 0)
 	
-	# 3. Set up the shape query parameters
-	var query := PhysicsShapeQueryParameters3D.new()
-	query.shape = shape_a
-	query.transform = mesh_a.global_transform
+	# Set up the intersection query
+	var query = PhysicsShapeQueryParameters3D.new()
+	query.shape = shape
+	query.transform = area.global_transform
+	query.collision_mask = area.collision_mask
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+	# Exclude itself from the check
+	query.exclude = [area.get_rid()] 
 	
-	# 4. Optional: If you only want to check against mesh_b specifically,
-	# you can dynamically read its collision body if it has one, 
-	# or let it query the entire physics world space:
-	var space_state := get_world_3d().direct_space_state
-	var results := space_state.collide_shape(query)
-	
+	# Check for intersections immediately
+	var results = space_state.intersect_shape(query, 1)
 	return results.size() > 0
+
+func generate() -> void:
+	while not (generationPasses <= 0 or findOpen().size() == 0 or err > errBuffer):
+		var gen = 0
+		for j in range(generationPasses):
+			var room = randiRoom.pick_random()
+			if findOpen().size() == 0:
+				break
+			var root = findOpen().pick_random()
+			instRoom(room, root.global_position, root.global_rotation)
+			genErr = false
+			await get_tree().physics_frame
+			var roomAABB : Area3D = rooms[-1].get_child(1)
+			var rootAABB : Area3D = root.get_parent().get_parent().get_child(1)
+			rootAABB.set_collision_layer_value(4, false)
+			if is_area_overlapping_instant(roomAABB):
+				print('room overlap')
+				rooms[-1].free()
+				rooms.resize(rooms.size() - 1)
+				genErr = true
+			rootAABB.set_collision_layer_value(4, true)
+			if not genErr:
+				root.set_meta("free", false)
+				generationPasses += -1
+				gen += 1
+			await self.step_pressed
+		if gen == 0:
+			err += 1
+	for i in findOpen():
+		inst(endRoom, i.global_position, i.global_rotation)
+
+#region -- Generate Enemies
+	for i in rooms:
+		if i.get_child(2).get_child_count() != 0:
+			for j in i.get_child(2).get_children():
+				enemySpawns.append(j)
+	for i in range(enemyPasses):
+		var root = enemySpawns.pick_random()
+		var enemy = enemys.pick_random()
+		inst(enemy, root.global_position, Vector3(0, 0, 0))
+		enemySpawns.erase(root)
+#endregion
+
+#region -- Generate Goals
+	## Find all open item / goal spawns
+	for i in rooms:
+		if i.get_child(3).get_child_count() != 0:
+			for j in i.get_child(3).get_children():
+				itemSpawns.append(j)
+
+		## Generate Goals
+	for i in range(randi_range(Globals.quota, maxGoalPasses)):
+		#print(i)
+		var root = itemSpawns.pick_random()
+		inst(goal, root.global_position, root.global_rotation)
+		itemSpawns.erase(root)
+		if itemSpawns.size() == 0:
+			break
+#endregion
+
+#region -- Generate Items
+	var passes = 0
+	if itemPasses < itemSpawns.size():
+		passes = itemPasses
+	else:
+		passes = itemSpawns.size()
+	for i in range(passes):
+		var root = itemSpawns.pick_random()
+		var item = items.pick_random()
+		inst(item, root.global_position, root.global_rotation)
+		itemSpawns.erase(root)
+#endregion
+
+signal step_pressed
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.keycode == KEY_L and event.pressed:
+			step_pressed.emit()

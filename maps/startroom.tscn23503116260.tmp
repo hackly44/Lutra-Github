@@ -4,7 +4,13 @@
 [ext_resource type="PackedScene" uid="uid://dy5esg3jp8w41" path="res://level objects/player.tscn" id="2_a0tk4"]
 [ext_resource type="ArrayOccluder3D" uid="uid://bn7gtptffyfdu" path="res://maps/occCulling/startroom.occ" id="3_7n77x"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_bkkad"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7n77x"]
+transparency = 1
+albedo_color = Color(1, 0, 0, 0.207843)
+disable_receive_shadows = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_bkkad"]
+material = SubResource("StandardMaterial3D_7n77x")
 size = Vector3(13, 11, 10)
 
 [sub_resource type="BoxMesh" id="BoxMesh_7n77x"]
@@ -83,13 +89,10 @@ script = ExtResource("1_d1vj6")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
 metadata/free = true
 
-[node name="AABB" type="Area3D" parent="." unique_id=584968791]
+[node name="AABB" type="MeshInstance3D" parent="." unique_id=1489928683]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
-collision_layer = 8
-collision_mask = 8
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AABB" unique_id=582119768]
-shape = SubResource("BoxShape3D_bkkad")
+visible = false
+mesh = SubResource("BoxMesh_bkkad")
 
 [node name="Enemy Spawns" type="Node3D" parent="." unique_id=1767063086]
 

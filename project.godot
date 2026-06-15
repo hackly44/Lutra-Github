@@ -20,6 +20,10 @@ run/main_scene="uid://dvmie2grolkmd"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="uid://e5tr4konjitn"
 
+[audio]
+
+buses/default_bus_layout="uid://cmthloq4onfb0"
+
 [autoload]
 
 Globals="*res://globals.gd"
@@ -110,10 +114,10 @@ o={
 3d_physics/layer_1="Player"
 3d_physics/layer_2="Level"
 3d_physics/layer_3="Level (Non-Player)"
+3d_physics/layer_4="Map Gen"
 
 [physics]
 
-3d/run_on_separate_thread=true
 common/physics_ticks_per_second=120
 3d/physics_engine="Jolt Physics"
 3d/solver/solver_iterations=32
