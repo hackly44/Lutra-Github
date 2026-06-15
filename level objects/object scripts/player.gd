@@ -26,6 +26,7 @@ laptop yay!!!
 
 '''
 
+
 #region -- Consts
 const lifeIcon = preload("res://lifeIcon.tscn")
 
@@ -79,7 +80,7 @@ const walkFootInterval = 0.5
 const runFootInterval = 0.3
 #endregion
 
-## for the love of god, organize this shit eventually
+# for the love of god, organize this shit eventually
 #region -- Variables
 var trueDirection = Vector3()
 var speed = 0.0

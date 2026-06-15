@@ -6,7 +6,7 @@ var level = 0
 
 var score = 0
 var startLives = 3
-var lives = 3
+var lives = 15
 
 var jumpCost = 1
 var dashCost = 1
@@ -17,14 +17,14 @@ var quota = 3
 
 var money = 0
 
-var maxStamina = 100
+var maxStamina = INF
 var dashSlots = 1
 var jumpSlots = 1
 
 var FOV = 70
 var Snesitivity = 1
 
-const version = "Lutra v0.12.4\n\"Physics Rework 4: Air Acceleration\"\nhackly44 2026"
+const version = "Lutra v0.13.1\n\"Map Improvement\"\nhackly44 2026"
 
 var deathAnim = false
 
