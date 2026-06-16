@@ -1,7 +1,7 @@
 extends Node3D
 
-const midRooms = [preload("res://maps/room_1.tscn"), preload("res://maps/room_2.tscn")]
-const roomChance = [3, 1]
+const midRooms = [preload("res://maps/room_1.tscn"), preload("res://maps/room_2.tscn"), preload("res://maps/room_3.tscn")]
+const roomChance = [5, 1, 2]
 var randiRoom = []
 
 const endRoom = preload("res://maps/endroom.tscn")
@@ -44,11 +44,31 @@ func _ready():
 ## Generate Rooms
 	generate.call_deferred()
 
+	#var room : Marker3D = midRooms[0].instantiate()
+	#add_child(room)
+	#await get_tree().process_frame
+	#var roomStart : Marker3D = room.get_child(0).get_child(0)
+	#room.global_position = $Generator/Generator1.global_position
+	#room.global_rotation = $Generator/Generator1.global_rotation
+	#print(roomStart.position)
+	#for i : Node3D in room.get_children():
+		#i.position += -roomStart.position
+	#room.rotation += -roomStart.rotation - Vector3(0, deg_to_rad(180), 0)
+
 ## Instancer for rooms
 func instRoom(node, pos, rot):
-	var instance = node.instantiate()
+	var instance : Marker3D = node.instantiate()
+	
+	var roomStart : Marker3D = instance.get_child(0).get_child(randf_range(0, instance.get_child(0).get_child_count() - 1))
+	
 	instance.position = pos
 	instance.rotation = rot
+	
+	for i : Node3D in instance.get_children():
+		i.position += -roomStart.position
+	instance.rotation += -roomStart.rotation - Vector3(0, deg_to_rad(180), 0)
+	roomStart.set_meta('free', false)
+	
 	add_child(instance)
 	rooms.append(instance)
 
@@ -58,7 +78,7 @@ func inst(node, pos, rot):
 	instance.rotation = rot
 	add_child(instance)
 
-## Search and Return first found empty generator
+# Search and Return first found empty generator
 func findOpen():
 	var open = []
 	for i in rooms:
@@ -67,7 +87,7 @@ func findOpen():
 				open.append(o)
 	return(open)
 
-## Weighted Random room generator
+# Weighted Random room generator
 func randomSet(value : Array, weight : Array):
 	var arr = []
 	for i in range(value.size()):
@@ -92,13 +112,15 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("enter"):
 		get_tree().reload_current_scene()
 
+## ENABLE FOR NEXT RELEASE
 func _on_area_3d_body_entered(body: Node3D) -> void:
-	if body == Globals.player:
-		if fEnter:
-			fEnter = false
-		else:
-			if Globals.score >= Globals.quota:
-				Globals.intermission = true
+	pass
+	#if body == Globals.player:
+		#if fEnter:
+			#fEnter = false
+		#else:
+			#if Globals.score >= Globals.quota:
+				#Globals.intermission = true
 
 ## --- AI WAS USED FOR THIS FUNCTION!!! ---
 func is_area_overlapping_instant(area: Area3D) -> bool:
@@ -146,7 +168,7 @@ func generate() -> void:
 				root.set_meta("free", false)
 				generationPasses += -1
 				gen += 1
-			await self.step_pressed
+			#await self.step_pressed
 		if gen == 0:
 			err += 1
 	for i in findOpen():
