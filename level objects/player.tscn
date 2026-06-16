@@ -203,6 +203,7 @@ transform = Transform3D(1, 0, 0, 0, -1, 8.742278e-08, 0, -8.742278e-08, -1, 0, 0
 mesh = SubResource("QuadMesh_lein8")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="Camera" unique_id=1347479797]
+visible = false
 spot_range = 59.0
 spot_attenuation = 0.0
 

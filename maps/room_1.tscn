@@ -38,6 +38,10 @@ metadata/free = true
 transform = Transform3D(0.7071067, 0, 0.7071068, 0, 1, 0, -0.7071068, 0, 0.7071067, -14.853554, 0, -40.353554)
 metadata/free = true
 
+[node name="Generator3" type="Marker3D" parent="Generator" unique_id=1073130646]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 0)
+metadata/free = true
+
 [node name="AABB" type="Area3D" parent="." unique_id=1000593736]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -22.5)
 collision_layer = 8
