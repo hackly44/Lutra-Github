@@ -24,7 +24,7 @@ var jumpSlots = 1
 var FOV = 70
 var Snesitivity = 1
 
-const version = "Lutra v0.13.2\n\"Map Improvement 2\"\nhackly44 2026"
+const version = "Lutra v0.13.3\n\"Map Improvement 3\"\nhackly44 2026"
 
 var deathAnim = false
 
