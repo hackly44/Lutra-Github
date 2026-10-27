@@ -1,14 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://dvmie2grolkmd"]
+[gd_scene format=3 uid="uid://dvmie2grolkmd"]
 
 [ext_resource type="Script" uid="uid://cg36wrlxwxmpg" path="res://menu.gd" id="1_mae5d"]
 [ext_resource type="FontFile" uid="uid://bamnh4btmynt1" path="res://Tomorrow-Regular.ttf" id="2_mae5d"]
 [ext_resource type="AudioStream" uid="uid://cqb1nen618xc5" path="res://Audio/sfx/11L-a_medium_pitched_men-1755663718224.ogg" id="4_4hy44"]
 [ext_resource type="Texture2D" uid="uid://cy7thw5a5bc7" path="res://banner.png" id="4_ytr4m"]
 
-[node name="Menu" type="Node2D"]
+[node name="Menu" type="Node2D" unique_id=1506841078]
 script = ExtResource("1_mae5d")
 
-[node name="Play" type="Button" parent="."]
+[node name="Play" type="Button" parent="." unique_id=725081046]
 offset_left = 16.0
 offset_top = 172.0
 offset_right = 256.0
@@ -17,7 +17,7 @@ theme_override_fonts/font = ExtResource("2_mae5d")
 theme_override_font_sizes/font_size = 40
 text = "Play"
 
-[node name="TestPlay" type="Button" parent="."]
+[node name="TestPlay" type="Button" parent="." unique_id=1022138770]
 offset_left = 16.0
 offset_top = 260.0
 offset_right = 256.0
@@ -26,7 +26,7 @@ theme_override_fonts/font = ExtResource("2_mae5d")
 theme_override_font_sizes/font_size = 20
 text = "Play Testroom"
 
-[node name="Settings" type="Button" parent="."]
+[node name="Settings" type="Button" parent="." unique_id=2076040840]
 visible = false
 offset_left = 16.0
 offset_top = 260.0
@@ -36,13 +36,13 @@ theme_override_fonts/font = ExtResource("2_mae5d")
 theme_override_font_sizes/font_size = 40
 text = "Settings"
 
-[node name="Panel" type="Panel" parent="."]
+[node name="Panel" type="Panel" parent="." unique_id=1080307677]
 offset_left = 16.0
 offset_top = 296.0
 offset_right = 256.0
 offset_bottom = 632.0
 
-[node name="FOVPanel" type="Panel" parent="Panel"]
+[node name="FOVPanel" type="Panel" parent="Panel" unique_id=933149904]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -51,7 +51,7 @@ offset_top = 4.0
 offset_right = -4.0
 offset_bottom = 44.0
 
-[node name="FOV" type="HSlider" parent="Panel/FOVPanel"]
+[node name="FOV" type="HSlider" parent="Panel/FOVPanel" unique_id=1978234049]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -65,7 +65,7 @@ max_value = 130.0
 value = 70.0
 rounded = true
 
-[node name="FOVLabel" type="Label" parent="Panel/FOVPanel"]
+[node name="FOVLabel" type="Label" parent="Panel/FOVPanel" unique_id=1824566414]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -78,7 +78,7 @@ theme_override_fonts/font = ExtResource("2_mae5d")
 theme_override_font_sizes/font_size = 20
 text = "FOV"
 
-[node name="FOVValue" type="Label" parent="Panel/FOVPanel"]
+[node name="FOVValue" type="Label" parent="Panel/FOVPanel" unique_id=486656822]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -92,7 +92,7 @@ theme_override_font_sizes/font_size = 20
 text = "70"
 horizontal_alignment = 2
 
-[node name="SensitivityPanel" type="Panel" parent="Panel"]
+[node name="SensitivityPanel" type="Panel" parent="Panel" unique_id=1153752047]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -101,7 +101,7 @@ offset_top = 48.0
 offset_right = -4.0
 offset_bottom = 88.0
 
-[node name="Sensitivity" type="HSlider" parent="Panel/SensitivityPanel"]
+[node name="Sensitivity" type="HSlider" parent="Panel/SensitivityPanel" unique_id=1220134417]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -115,7 +115,7 @@ max_value = 300.0
 value = 100.0
 rounded = true
 
-[node name="SensitivityLabel" type="Label" parent="Panel/SensitivityPanel"]
+[node name="SensitivityLabel" type="Label" parent="Panel/SensitivityPanel" unique_id=892923440]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -128,7 +128,7 @@ theme_override_fonts/font = ExtResource("2_mae5d")
 theme_override_font_sizes/font_size = 20
 text = "Sensitivity"
 
-[node name="SensitivityValue" type="Label" parent="Panel/SensitivityPanel"]
+[node name="SensitivityValue" type="Label" parent="Panel/SensitivityPanel" unique_id=460823070]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
@@ -141,10 +141,10 @@ theme_override_font_sizes/font_size = 20
 text = "100"
 horizontal_alignment = 2
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1116643459]
 stream = ExtResource("4_4hy44")
 
-[node name="Verson Lable" type="Label" parent="."]
+[node name="Verson Lable" type="Label" parent="." unique_id=1688045060]
 offset_left = 759.0
 offset_top = 484.0
 offset_right = 1152.0
@@ -154,7 +154,7 @@ text = "--Version--"
 horizontal_alignment = 2
 vertical_alignment = 2
 
-[node name="Banner" type="Sprite2D" parent="."]
+[node name="Banner" type="Sprite2D" parent="." unique_id=1051136494]
 position = Vector2(267, 80)
 scale = Vector2(0.7893082, 0.7893082)
 texture = ExtResource("4_ytr4m")

@@ -1,12 +1,13 @@
 extends Node
 
-var player
+var player : CharacterBody3D
 
 var level = 0
 
 var score = 0
 var startLives = 3
 var lives = 15
+var hotSwapHolders = {}
 
 var jumpCost = 1
 var dashCost = 1
@@ -24,7 +25,7 @@ var jumpSlots = 1
 var FOV = 70
 var Snesitivity = 1
 
-const version = "Lutra v0.13.3\n\"Map Improvement 3\"\nhackly44 2026"
+const version = "Lutra v0.14.1-a\n\"General Features 1 (Backup)\"\nhackly44 2026"
 
 var deathAnim = false
 

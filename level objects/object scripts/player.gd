@@ -28,8 +28,6 @@ laptop yay!!!
 
 
 #region -- Consts
-const lifeIcon = preload("res://lifeIcon.tscn")
-
 const velocityMult = 2
 
 const baseMouseSens = 0.005
@@ -103,6 +101,7 @@ var footInterval = 0.5
 var allowInput = true
 var allowWallRun = false
 var wallRunning = false
+var hotSwapIcons = {}
 
 ## Settings
 var mouseSens = 0.0
@@ -219,7 +218,17 @@ func _physics_process(delta):
 		Globals.intermission = false
 		allowInput = false
 
-	$Ui/UiDebug.text = str(acceleration, '\n', speed)
+	for i in Globals.hotSwapHolders:
+		if not i in hotSwapIcons:
+			var node = Sprite2D.new()
+			node.texture = load("res://hotswapIcon.png")
+			hotSwapIcons[i] = node
+			$Ui/UiHotswap.add_child(node)
+		hotSwapIcons[i].position = $Camera.unproject_position(Globals.hotSwapHolders[i].global_position)
+
+	for i in hotSwapIcons:
+		if hotSwapIcons[i].global_position.distance_to(Vector2(576,329)) < 30:
+			print('inVIew')
 #endregion
 
 #region -- Shaders
@@ -501,7 +510,11 @@ func reload() -> void:
 	for i in $Ui/UiLives.get_children():
 		i.queue_free()
 	for i in range(Globals.lives):
-		inst(lifeIcon, Vector2((i * 20), 0), $Ui/UiLives)
+		#inst(lifeIcon, Vector2((i * 20), 0), $Ui/UiLives)
+		var node = Sprite2D.new()
+		node.texture = load("res://lifeIcon.png")
+		$Ui/UiLives.add_child(node)
+		node.position = Vector2((i * 10), 0)
 
 func inst(node, pos, parent)  -> void:
 	var instance = node.instantiate()

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://xe7q2lck5qh2" path="res://maps/scripts/startroom.gd" id="1_d1vj6"]
 [ext_resource type="PackedScene" uid="uid://dy5esg3jp8w41" path="res://level objects/player.tscn" id="2_a0tk4"]
 [ext_resource type="ArrayOccluder3D" uid="uid://bn7gtptffyfdu" path="res://maps/occCulling/startroom.occ" id="3_7n77x"]
+[ext_resource type="PackedScene" uid="uid://dyh48f7s8aa53" path="res://level objects/hotswap_holder.tscn" id="4_bkkad"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_bkkad"]
 size = Vector3(13, 11, 10)
@@ -53,8 +54,10 @@ sky_material = SubResource("ProceduralSkyMaterial_7n77x")
 [sub_resource type="Environment" id="Environment_gxt6l"]
 background_mode = 2
 sky = SubResource("Sky_7n77x")
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
 ambient_light_sky_contribution = 0.38
-ambient_light_energy = 0.0
+ambient_light_energy = 0.2
 tonemap_mode = 2
 ssr_max_steps = 512
 ssr_fade_in = 0.0038074336
@@ -156,6 +159,9 @@ shape = SubResource("ConcavePolygonShape3D_8k5aw")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=252942763]
 environment = SubResource("Environment_gxt6l")
 
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1902809069]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+
 [node name="OccluderInstance3D" type="OccluderInstance3D" parent="." unique_id=130017146]
 occluder = ExtResource("3_7n77x")
 
@@ -166,18 +172,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 5, -4.5)
 visible = false
 mesh = SubResource("BoxMesh_gxt6l")
-
-[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=97628341]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 9, 0)
-light_energy = 2.0
-shadow_enabled = true
-omni_range = 20.0
-
-[node name="OmniLight3D2" type="OmniLight3D" parent="." unique_id=976506156]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 9, 0)
-light_energy = 2.0
-shadow_enabled = true
-omni_range = 20.0
 
 [node name="Area3D" type="Area3D" parent="." unique_id=1440193611]
 
@@ -192,5 +186,8 @@ collision_mask = 0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="SafeGuard" unique_id=686101773]
 shape = SubResource("ConcavePolygonShape3D_gxt6l")
+
+[node name="HotswapHolder" parent="." unique_id=227958557 instance=ExtResource("4_bkkad")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, -1)
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]

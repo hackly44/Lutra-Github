@@ -23,7 +23,7 @@ var errBuffer = 4
 var maxGoalPasses = 100
 
 #region -- Generation Passes
-var generationPasses = 100
+var generationPasses = 10
 var enemyPasses = 0
 var itemPasses = 0
 #endregion
@@ -111,6 +111,8 @@ func _process(_delta: float) -> void:
 
 	if Input.is_action_just_pressed("enter"):
 		get_tree().reload_current_scene()
+
+	$DirectionalLight3D.rotation.y = Globals.player.rotation.y
 
 ## ENABLE FOR NEXT RELEASE
 func _on_area_3d_body_entered(body: Node3D) -> void:

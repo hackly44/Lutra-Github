@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://b4sqgrbc5xt37" path="res://level objects/object scripts/player.gd" id="1_4flbx"]
 [ext_resource type="FontFile" uid="uid://bamnh4btmynt1" path="res://Tomorrow-Regular.ttf" id="2_cnrjc"]
 [ext_resource type="AudioStream" uid="uid://d3wqaglsd4l0a" path="res://Audio/sfx/11L-a_quick_footstep-1755663567080.ogg" id="3_cnrjc"]
+[ext_resource type="Texture2D" uid="uid://c305lr5tx0yvf" path="res://hotswapIcon.png" id="3_uh1bs"]
 [ext_resource type="Texture2D" uid="uid://b8h1ynxwcxf8o" path="res://maxresdefault.jpg" id="4_gqe3r"]
 [ext_resource type="AudioStream" uid="uid://wapqbly1ta28" path="res://Audio/sfx/sypherpk.wav" id="5_lein8"]
 [ext_resource type="Material" uid="uid://wew0km0e3tmr" path="res://Shaders/glitch.tres" id="6_vtiqs"]
@@ -194,7 +195,7 @@ shape = SubResource("CapsuleShape3D_4flbx")
 mesh = SubResource("CapsuleMesh_onrkg")
 
 [node name="Camera" type="Camera3D" parent="." unique_id=326324430]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00321567, 1.04037, -0.00202847)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
 current = true
 fov = 37.8493
 
@@ -344,7 +345,7 @@ position = Vector2(576, 324)
 polygon = PackedVector2Array(5, 0, 3, -4, 4, -4, 6, 0, 4, 4, 3, 4)
 
 [node name="UiLives" type="Node2D" parent="Ui" unique_id=1441915559]
-position = Vector2(12, 623)
+position = Vector2(16, 627)
 
 [node name="Upgrade" type="Node2D" parent="Ui" unique_id=1243211700]
 
@@ -395,6 +396,12 @@ offset_right = 606.0
 offset_bottom = 458.0
 text = "1$"
 horizontal_alignment = 1
+
+[node name="UiHotswap" type="Node2D" parent="Ui" unique_id=571906237]
+
+[node name="HotswapIcon" type="Sprite2D" parent="Ui" unique_id=708220003]
+position = Vector2(760, 664)
+texture = ExtResource("3_uh1bs")
 
 [node name="WallRun" type="Timer" parent="." unique_id=577629127]
 process_callback = 0

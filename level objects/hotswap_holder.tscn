@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://dyh48f7s8aa53"]
+
+[ext_resource type="Script" uid="uid://cwb83waj23c3c" path="res://level objects/object scripts/hotswap_holder.gd" id="1_42nbx"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4koeb"]
+radius = 1.0
+height = 4.0
+
+[node name="HotswapHolder" type="Node3D" unique_id=227958557]
+script = ExtResource("1_42nbx")
+
+[node name="Standing" type="MeshInstance3D" parent="." unique_id=1472988947]
+mesh = SubResource("CapsuleMesh_4koeb")
+skeleton = NodePath("../..")
