@@ -20,7 +20,7 @@ func _process(delta: float) -> void:
 	$MeshInstance3D.material_override.emission = lerp(enabledColor, disabledColor, transition)
 	$MeshInstance3D/OmniLight3D.light_energy = lerp(enabledLightStrenth, disabledLightStrenth, transition)
 	$MeshInstance3D/OmniLight3D.light_color = lerp(enabledColor, disabledColor, transition)
-	if Globals.player.activeDashes.has(self):
+	if GB.player.activeDashes.has(self):
 		disabled = true
 		transition = move_toward(transition, 1, transitionTime * delta)
 	else:
@@ -28,6 +28,6 @@ func _process(delta: float) -> void:
 		transition = move_toward(transition, 0, transitionTime * delta)
 
 func _on_body_entered(body: Node3D) -> void:
-	if body == Globals.player and (not disabled) and Globals.player.activeDashes.size() < Globals.dashSlots:
-		Globals.player.dashCrystal(self)
+	if body == GB.player and (not disabled) and GB.player.activeDashes.size() < GB.dashSlots:
+		GB.player.dashCrystal(self)
 		$AudioStreamPlayer3D.play()

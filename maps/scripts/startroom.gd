@@ -30,15 +30,15 @@ var itemPasses = 0
 
 func _ready():
 
-	Globals.level += 1
+	GB.level += 1
 
-	#generationPasses = Globals.f1(Globals.level)
-	#Globals.quota = Globals.f2(Globals.level)
-	#maxGoalPasses = Globals.f3(Globals.level)
-	#enemyPasses = Globals.f4(Globals.level)
-	#itemPasses = Globals.f5(Globals.level)
+	#generationPasses = GB.f1(GB.level)
+	#GB.quota = GB.f2(GB.level)
+	#maxGoalPasses = GB.f3(GB.level)
+	#enemyPasses = GB.f4(GB.level)
+	#itemPasses = GB.f5(GB.level)
 
-	Globals.quota = 0
+	GB.quota = 0
 	randiRoom = randomSet(midRooms, roomChance)
 
 ## Generate Rooms
@@ -100,29 +100,29 @@ func randomSet(value : Array, weight : Array):
 var fEnter = true
 
 func _process(_delta: float) -> void:
-	if Globals.deathAnim:
+	if GB.deathAnim:
 		fEnter = true
-	if Globals.continued:
-		Globals.continued = false
+	if GB.continued:
+		GB.continued = false
 
-		Globals.lives = Globals.startLives
+		GB.lives = GB.startLives
 
 		get_tree().reload_current_scene()
 
 	if Input.is_action_just_pressed("enter"):
 		get_tree().reload_current_scene()
 
-	$DirectionalLight3D.rotation.y = Globals.player.rotation.y
+	$DirectionalLight3D.rotation.y = GB.player.rotation.y
 
 ## ENABLE FOR NEXT RELEASE
 func _on_area_3d_body_entered(body: Node3D) -> void:
 	pass
-	#if body == Globals.player:
+	#if body == GB.player:
 		#if fEnter:
 			#fEnter = false
 		#else:
-			#if Globals.score >= Globals.quota:
-				#Globals.intermission = true
+			#if GB.score >= GB.quota:
+				#GB.intermission = true
 
 ## --- AI WAS USED FOR THIS FUNCTION!!! ---
 func is_area_overlapping_instant(area: Area3D) -> bool:
@@ -196,7 +196,7 @@ func generate() -> void:
 				itemSpawns.append(j)
 
 		## Generate Goals
-	for i in range(randi_range(Globals.quota, maxGoalPasses)):
+	for i in range(randi_range(GB.quota, maxGoalPasses)):
 		#print(i)
 		var root = itemSpawns.pick_random()
 		inst(goal, root.global_position, root.global_rotation)

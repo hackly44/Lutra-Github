@@ -3,15 +3,15 @@ extends Node3D
 var speed = 0.5
 
 func _process(delta: float) -> void:
-	if Globals.deathAnim:
+	if GB.deathAnim:
 		$Timer.start(2)
-	$RayCast3D.target_position = Globals.player.global_position - global_position
+	$RayCast3D.target_position = GB.player.global_position - global_position
 
 	if $RayCast3D.is_colliding():
-		$LaserDir.look_at(Globals.player.global_position)
+		$LaserDir.look_at(GB.player.global_position)
 		$Timer.start()
 
-	$PlayerDir.look_at(Globals.player.global_position)
+	$PlayerDir.look_at(GB.player.global_position)
 
 	if $Timer.time_left == 0:
 		$LaserBeam/MeshInstance3D3.show()
@@ -24,8 +24,8 @@ func _process(delta: float) -> void:
 	else:
 		$Laser.target_position = Vector3(0, 0, 0)
 
-	if $Laser.get_collider() == Globals.player:
-		Globals.player.damage()
+	if $Laser.get_collider() == GB.player:
+		GB.player.damage()
 
 	drawLaser()
 

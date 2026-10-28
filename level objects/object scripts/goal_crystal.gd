@@ -21,7 +21,7 @@ func _process(delta: float) -> void:
 	$MeshInstance3D/OmniLight3D.light_energy = lerp(enabledLightStrenth, disabledLightStrenth, transition)
 	$MeshInstance3D/OmniLight3D.light_color = lerp(enabledColor, disabledColor, transition)
 
-	if Globals.player.activeGoals.has(self):
+	if GB.player.activeGoals.has(self):
 		disabled = true
 		transition = move_toward(transition, 1, transitionTime * delta)
 	else:
@@ -29,6 +29,6 @@ func _process(delta: float) -> void:
 		transition = move_toward(transition, 0, transitionTime * delta)
 
 func _on_body_entered(body: Node3D) -> void:
-	if body == Globals.player and (not disabled):
-		Globals.player.goalCrystal(self)
+	if body == GB.player and (not disabled):
+		GB.player.goalCrystal(self)
 		$AudioStreamPlayer3D.play()

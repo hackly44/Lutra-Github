@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dyh48f7s8aa53"]
 
-[ext_resource type="Script" uid="uid://cwb83waj23c3c" path="res://level objects/object scripts/hotswap_holder.gd" id="1_42nbx"]
+[ext_resource type="Script" uid="uid://ci2pm4u4wq4gu" path="res://level objects/object scripts/hotswap_holder.gd" id="1_42nbx"]
+[ext_resource type="Texture2D" uid="uid://c305lr5tx0yvf" path="res://hotswapIcon.png" id="2_wvt8c"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_4koeb"]
 radius = 1.0
@@ -12,3 +13,30 @@ script = ExtResource("1_42nbx")
 [node name="Standing" type="MeshInstance3D" parent="." unique_id=1472988947]
 mesh = SubResource("CapsuleMesh_4koeb")
 skeleton = NodePath("../..")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=196607178]
+position = Vector2(21, 4)
+texture = ExtResource("2_wvt8c")
+region_rect = Rect2(0.34, 0, 15.78846, 16.214033)
+
+[node name="ProgressBar" type="ProgressBar" parent="Sprite2D" unique_id=1056502807]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -26.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+max_value = 1.0
+show_percentage = false
+
+[node name="Timer" type="Timer" parent="." unique_id=1254362002]
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

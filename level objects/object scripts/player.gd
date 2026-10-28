@@ -102,6 +102,7 @@ var allowInput = true
 var allowWallRun = false
 var wallRunning = false
 var hotSwapIcons = {}
+var targetIcons = {}
 
 ## Settings
 var mouseSens = 0.0
@@ -110,7 +111,7 @@ var mouseSens = 0.0
 var activeDashes = []
 var activeJumps = []
 var activeGoals = []
-var stamina = Globals.maxStamina
+var stamina = GB.maxStamina
 var staminaRegen = 5
 var idleRegen = 8
 #endregion
@@ -118,11 +119,11 @@ var idleRegen = 8
 @onready var material = $DeathShader.material as ShaderMaterial
 
 func _ready():
-	Globals.player = self
+	GB.player = self
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	spawn = position
 	$RigidBody3D.gravity_scale = gravityStrenth
-	$"Ui/Verson Lable".text = Globals.version
+	$"Ui/Verson Lable".text = GB.version
 	$DeathShader.hide()
 	reload()
 	$Ui/Upgrade.hide()
@@ -130,7 +131,7 @@ func _ready():
 # can prob move to _physics_process
 func _unhandled_input(event):
 	if $"Death Anim".time_left == 0:
-		mouseSens = baseMouseSens * Globals.Snesitivity
+		mouseSens = baseMouseSens * GB.Snesitivity
 		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			if event is InputEventMouseMotion:
 				rotation.y -= event.relative.x * mouseSens
@@ -141,7 +142,7 @@ func _unhandled_input(event):
 func _physics_process(delta):
 	$Camera.rotation = camRotation + camOffset
 
-	$Camera.fov = Globals.FOV
+	$Camera.fov = GB.FOV
 
 	if position.y < -200:
 		damage()
@@ -180,20 +181,20 @@ func _physics_process(delta):
 	else:
 		$Ui/Center/Direction.hide()
 
-	$Ui/UiDashes.text = str(activeJumps.size(), "⁄", Globals.jumpSlots)
-	$Ui/UiJumps.text = str(activeDashes.size(), "⁄", Globals.dashSlots)
-	$Ui/UiScore.text = str(activeGoals.size(), "⁄", str(Globals.quota))
+	$Ui/UiDashes.text = str(activeJumps.size(), "⁄", GB.jumpSlots)
+	$Ui/UiJumps.text = str(activeDashes.size(), "⁄", GB.dashSlots)
+	$Ui/UiScore.text = str(activeGoals.size(), "⁄", str(GB.quota))
 	@warning_ignore("integer_division")
-	$Ui/UiStamina.text = str(roundi((stamina / Globals.maxStamina) * 100), "%")
-	#$Ui/UiStamina.text = str(stamina) + '/' + str(Globals.maxStamina)
-	$Ui/UiLevel.text = str(Globals.level)
+	$Ui/UiStamina.text = str(roundi((stamina / GB.maxStamina) * 100), "%")
+	#$Ui/UiStamina.text = str(stamina) + '/' + str(GB.maxStamina)
+	$Ui/UiLevel.text = str(GB.level)
 	$Ui/UiSpeed.text = str(Vector3(velocity.x, 0, velocity.z).length()).pad_decimals(2)
 
-	$Ui/Upgrade/UpMoney.text = str(Globals.money)
-	$Ui/Upgrade/UpJump.text = '+1 Jump \n' + str(Globals.money) + '/' + str(Globals.jumpCost)
-	$Ui/Upgrade/UpDash.text = '+1 Dash \n' + str(Globals.money) + '/' + str(Globals.dashCost)
-	$Ui/Upgrade/UpLife.text = '+1 Life \n' + str(Globals.money) + '/' + str(Globals.lifeCost)
-	$Ui/Upgrade/UpRun.text = '+25 Stamina \n' + str(Globals.money) + '/' + str(Globals.runCost)
+	$Ui/Upgrade/UpMoney.text = str(GB.money)
+	$Ui/Upgrade/UpJump.text = '+1 Jump \n' + str(GB.money) + '/' + str(GB.jumpCost)
+	$Ui/Upgrade/UpDash.text = '+1 Dash \n' + str(GB.money) + '/' + str(GB.dashCost)
+	$Ui/Upgrade/UpLife.text = '+1 Life \n' + str(GB.money) + '/' + str(GB.lifeCost)
+	$Ui/Upgrade/UpRun.text = '+25 Stamina \n' + str(GB.money) + '/' + str(GB.runCost)
 
 
 	$Ui/Center/Left.position.x = leftwardSpeed
@@ -210,25 +211,13 @@ func _physics_process(delta):
 	else:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
-	Globals.score = activeGoals.size()
+	GB.score = activeGoals.size()
 
-	if Globals.intermission:
+	if GB.intermission:
 		$Ui/Upgrade.show()
-		Globals.money += Globals.score - Globals.quota
-		Globals.intermission = false
+		GB.money += GB.score - GB.quota
+		GB.intermission = false
 		allowInput = false
-
-	for i in Globals.hotSwapHolders:
-		if not i in hotSwapIcons:
-			var node = Sprite2D.new()
-			node.texture = load("res://hotswapIcon.png")
-			hotSwapIcons[i] = node
-			$Ui/UiHotswap.add_child(node)
-		hotSwapIcons[i].position = $Camera.unproject_position(Globals.hotSwapHolders[i].global_position)
-
-	for i in hotSwapIcons:
-		if hotSwapIcons[i].global_position.distance_to(Vector2(576,329)) < 30:
-			print('inVIew')
 #endregion
 
 #region -- Shaders
@@ -421,7 +410,7 @@ func _physics_process(delta):
 
 	if Input.is_action_pressed("sprint"):
 		stamina += -runningCost * delta
-	elif stamina < Globals.maxStamina:
+	elif stamina < GB.maxStamina:
 		if velocity == Vector3(0,0,0):
 			stamina += idleRegen * delta
 		else:
@@ -430,8 +419,8 @@ func _physics_process(delta):
 	if stamina < 0:
 		stamina = 0
 
-	if stamina > Globals.maxStamina:
-		stamina = Globals.maxStamina
+	if stamina > GB.maxStamina:
+		stamina = GB.maxStamina
 
 	trueDirection = velocityFoward * rawInput.y + velocityRight * rawInput.x
 	trueDirection.y = 0.0
@@ -454,7 +443,7 @@ func goalCrystal(body) -> void:
 	activeGoals.append(body)
 
 func damage(pos : Vector3 = Vector3(0,0,0), power : int = 0) -> void:
-	Globals.deathAnim = true
+	GB.deathAnim = true
 	if $"Death Anim".time_left == 0:
 		$RigidBody3D/Camera3D.rotation = $Camera.rotation
 		$Camera.current = false
@@ -479,9 +468,9 @@ func damage(pos : Vector3 = Vector3(0,0,0), power : int = 0) -> void:
 		$"Death Anim".start(0.1)
 
 func _on_death_anim_timeout() -> void:
-	Globals.deathAnim = false
-	Globals.lives += -1
-	if Globals.lives <= 0:
+	GB.deathAnim = false
+	GB.lives += -1
+	if GB.lives <= 0:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		get_tree().change_scene_to_file("res://menu.tscn")
 	else:
@@ -509,7 +498,7 @@ func reload() -> void:
 	$Crounched.disabled = false
 	for i in $Ui/UiLives.get_children():
 		i.queue_free()
-	for i in range(Globals.lives):
+	for i in range(GB.lives):
 		#inst(lifeIcon, Vector2((i * 20), 0), $Ui/UiLives)
 		var node = Sprite2D.new()
 		node.texture = load("res://lifeIcon.png")
@@ -522,31 +511,31 @@ func inst(node, pos, parent)  -> void:
 	parent.add_child(instance)
 
 func _on_continue_pressed() -> void:
-	Globals.continued = true
+	GB.continued = true
 
 func _on_up_jump_pressed() -> void:
-	if Globals.money >= Globals.jumpCost:
-		Globals.money -= Globals.jumpCost
-		Globals.jumpSlots += 1
-		Globals.jumpCost += 2
+	if GB.money >= GB.jumpCost:
+		GB.money -= GB.jumpCost
+		GB.jumpSlots += 1
+		GB.jumpCost += 2
 
 func _on_up_dash_pressed() -> void:
-	if Globals.money >= Globals.dashCost:
-		Globals.money -= Globals.dashCost
-		Globals.dashSlots += 1
-		Globals.dashCost += 2
+	if GB.money >= GB.dashCost:
+		GB.money -= GB.dashCost
+		GB.dashSlots += 1
+		GB.dashCost += 2
 
 func _on_up_life_pressed() -> void:
-	if Globals.money >= Globals.lifeCost:
-		Globals.money -= Globals.lifeCost
-		Globals.startLives += 1
-		Globals.lifeCost += 5
+	if GB.money >= GB.lifeCost:
+		GB.money -= GB.lifeCost
+		GB.startLives += 1
+		GB.lifeCost += 5
 
 func _on_up_run_pressed() -> void:
-	if Globals.money >= Globals.runCost:
-		Globals.money -= Globals.runCost
-		Globals.maxStamina += 25
-		Globals.runCost += 5
+	if GB.money >= GB.runCost:
+		GB.money -= GB.runCost
+		GB.maxStamina += 25
+		GB.runCost += 5
 
 @onready var wallSensor: ShapeCast3D = $WallSensor
 

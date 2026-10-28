@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cxboxlrup62xg"]
+
+[ext_resource type="Script" uid="uid://gl1t2lxss0tb" path="res://occFixer.gd" id="1_76l3n"]
+
+[node name="Node3D" type="Node3D" unique_id=996136088 node_paths=PackedStringArray("target_mesh_instance")]
+script = ExtResource("1_76l3n")
+target_mesh_instance = NodePath("")

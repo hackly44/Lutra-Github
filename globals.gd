@@ -7,12 +7,13 @@ var level = 0
 var score = 0
 var startLives = 3
 var lives = 15
-var hotSwapHolders = {}
 
 var jumpCost = 1
 var dashCost = 1
 var lifeCost = 5
 var runCost = 2
+
+var targetedHotswap : Node3D
 
 var quota = 3
 
@@ -25,7 +26,7 @@ var jumpSlots = 1
 var FOV = 70
 var Snesitivity = 1
 
-const version = "Lutra v0.14.1-a\n\"General Features 1 (Backup)\"\nhackly44 2026"
+const version = "Lutra v0.14.1-b\n\"General Features 1\"\nhackly44 2026"
 
 var deathAnim = false
 
