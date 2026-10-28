@@ -1,7 +1,7 @@
 extends Node3D
 
-const midRooms = [preload("res://maps/room_1.tscn"), preload("res://maps/room_2.tscn"), preload("res://maps/room_3.tscn")]
-const roomChance = [5, 1, 2]
+const midRooms = [preload("res://maps/room_1.tscn"), preload("res://maps/room_2.tscn"), preload("res://maps/room_3.tscn"), preload("res://maps/room_4.tscn")]
+const roomChance = [5, 1, 2, 3]
 var randiRoom = []
 
 const endRoom = preload("res://maps/endroom.tscn")
@@ -23,7 +23,7 @@ var errBuffer = 4
 var maxGoalPasses = 100
 
 #region -- Generation Passes
-var generationPasses = 10
+var generationPasses = 100
 var enemyPasses = 0
 var itemPasses = 0
 #endregion
